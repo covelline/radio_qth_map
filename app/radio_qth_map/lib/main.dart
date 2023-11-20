@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:radio_qth_map/firebase_options.dart';
 import 'package:radio_qth_map/screen/map_screen.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
   runApp(const MyApp());
 }
 
@@ -41,7 +42,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MapScreen(),
+      home: const MaxWidthBox(
+        maxWidth: 1200,
+        child: MapScreen(),
+      ),
+      builder: (context, child) {
+        return ResponsiveBreakpoints.builder(
+          child: child!,
+          breakpoints: [
+            const Breakpoint(start: 0, end: 450, name: MOBILE),
+            const Breakpoint(start: 451, end: 800, name: TABLET),
+            const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,3 +1,20 @@
 {
-  "callsign": "callsign"
+  "add_qso": "Add QSO",
+  "band": "Band",
+  "callsign": "callsign",
+  "callsign_is_required": "Callsign in required",
+  "end": "End",
+  "frequency": "Frequency",
+  "frequency_error": "Either Frequency or Band is required",
+  "gridlocator": "Grid Locator",
+  "latitude": "Latitude",
+  "location_error": "Either Grid Locator or Latitude and Longitude is required",
+  "longitude": "Longitude",
+  "mode": "Mode",
+  "my_statio_settings": "My station settings",
+  "other_station_settings": "Other station settings",
+  "publish_log": "Publish log",
+  "publish_log_tooltip": "To publish logs, please add logs",
+  "start": "Start",
+  "time_error": "Either Start or End is required"
 }

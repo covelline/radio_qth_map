@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:radio_qth_map/screen/add_operation_screen.dart';
+import 'package:responsive_framework/max_width_box.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -60,15 +62,28 @@ class MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SearchBar(
-          hintText: AppLocalizations.of(context)!.callsign,
-          leading: const Icon(Icons.search),
-          onTap: () {
-            _showSearchDialog();
-          },
-        ),
+        title: const Text('QTH map'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _showSearchDialog,
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const MaxWidthBox(
+              maxWidth: 1200,
+              child: AddOperationScreen(),
+            ),
+          ));
+        },
+        label: Text(AppLocalizations.of(context)!.add_qso),
+        icon: const Icon(Icons.add),
       ),
       body: const GoogleMap(
+        zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
           target: LatLng(0, 0),
           zoom: 2,
