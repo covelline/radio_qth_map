@@ -188,7 +188,8 @@ class __$$OperationImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$OperationImpl implements _Operation {
   const _$OperationImpl(
       {this.id,

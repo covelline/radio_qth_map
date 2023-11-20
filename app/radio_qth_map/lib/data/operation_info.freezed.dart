@@ -33,11 +33,11 @@ mixin _$OperationInfo {
   String? get id => throw _privateConstructorUsedError;
 
   /// 運用モード
-  Enum get mode => throw _privateConstructorUsedError;
+  Enum? get mode => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)
+    required TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)
         amateur,
     required TResult Function(String? id, FreeLicenseRadioMode mode)
         freeLicense,
@@ -45,16 +45,16 @@ mixin _$OperationInfo {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult? Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
     required TResult orElse(),
@@ -129,9 +129,9 @@ abstract class _$$AmateurRadioOperationInfoImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? id,
-      AmateurRadioMode mode,
+      AmateurRadioMode? mode,
       AmateurRadioBandInfo band,
-      double powerOutput});
+      double? powerOutput});
 
   $AmateurRadioBandInfoCopyWith<$Res> get band;
 }
@@ -149,27 +149,27 @@ class __$$AmateurRadioOperationInfoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? mode = null,
+    Object? mode = freezed,
     Object? band = null,
-    Object? powerOutput = null,
+    Object? powerOutput = freezed,
   }) {
     return _then(_$AmateurRadioOperationInfoImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      mode: null == mode
+      mode: freezed == mode
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
-              as AmateurRadioMode,
+              as AmateurRadioMode?,
       band: null == band
           ? _value.band
           : band // ignore: cast_nullable_to_non_nullable
               as AmateurRadioBandInfo,
-      powerOutput: null == powerOutput
+      powerOutput: freezed == powerOutput
           ? _value.powerOutput
           : powerOutput // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
     ));
   }
 
@@ -183,13 +183,14 @@ class __$$AmateurRadioOperationInfoImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
   const _$AmateurRadioOperationInfoImpl(
       {this.id,
-      required this.mode,
+      this.mode,
       required this.band,
-      required this.powerOutput,
+      this.powerOutput,
       final String? $type})
       : $type = $type ?? 'amateur';
 
@@ -202,13 +203,13 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
 
   /// 運用モード
   @override
-  final AmateurRadioMode mode;
+  final AmateurRadioMode? mode;
 
   /// 運用バンド
   @override
   final AmateurRadioBandInfo band;
   @override
-  final double powerOutput;
+  final double? powerOutput;
 
   @JsonKey(name: 'runtimeType')
   final String $type;
@@ -244,8 +245,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)
+    required TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)
         amateur,
     required TResult Function(String? id, FreeLicenseRadioMode mode)
         freeLicense,
@@ -256,8 +257,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult? Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
   }) {
@@ -267,8 +268,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
     required TResult orElse(),
@@ -321,9 +322,9 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
 abstract class AmateurRadioOperationInfo implements OperationInfo {
   const factory AmateurRadioOperationInfo(
       {final String? id,
-      required final AmateurRadioMode mode,
+      final AmateurRadioMode? mode,
       required final AmateurRadioBandInfo band,
-      required final double powerOutput}) = _$AmateurRadioOperationInfoImpl;
+      final double? powerOutput}) = _$AmateurRadioOperationInfoImpl;
 
   factory AmateurRadioOperationInfo.fromJson(Map<String, dynamic> json) =
       _$AmateurRadioOperationInfoImpl.fromJson;
@@ -335,11 +336,11 @@ abstract class AmateurRadioOperationInfo implements OperationInfo {
   @override
 
   /// 運用モード
-  AmateurRadioMode get mode;
+  AmateurRadioMode? get mode;
 
   /// 運用バンド
   AmateurRadioBandInfo get band;
-  double get powerOutput;
+  double? get powerOutput;
   @override
   @JsonKey(ignore: true)
   _$$AmateurRadioOperationInfoImplCopyWith<_$AmateurRadioOperationInfoImpl>
@@ -439,8 +440,8 @@ class _$FreeLicenseRadioOperationInfoImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)
+    required TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)
         amateur,
     required TResult Function(String? id, FreeLicenseRadioMode mode)
         freeLicense,
@@ -451,8 +452,8 @@ class _$FreeLicenseRadioOperationInfoImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult? Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
   }) {
@@ -462,8 +463,8 @@ class _$FreeLicenseRadioOperationInfoImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? id, AmateurRadioMode mode,
-            AmateurRadioBandInfo band, double powerOutput)?
+    TResult Function(String? id, AmateurRadioMode? mode,
+            AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
     TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
     required TResult orElse(),

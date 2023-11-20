@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
@@ -8,17 +10,19 @@ part 'operation_info.g.dart';
 
 @freezed
 class OperationInfo with _$OperationInfo {
+  @JsonSerializable(explicitToJson: true)
+
   /// アマチュア無線の運用情報
   const factory OperationInfo.amateur({
     /// firestoreのID
     String? id,
 
     /// 運用モード
-    required AmateurRadioMode mode,
+    AmateurRadioMode? mode,
 
     /// 運用バンド
     required AmateurRadioBandInfo band,
-    required double powerOutput, // 送信出力
+    double? powerOutput, // 送信出力
   }) = AmateurRadioOperationInfo;
 
   // フリーライセンスラジオ用

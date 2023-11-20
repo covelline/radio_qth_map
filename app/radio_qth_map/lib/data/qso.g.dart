@@ -22,7 +22,7 @@ _$QsoImpl _$$QsoImplFromJson(Map<String, dynamic> json) => _$QsoImpl(
 Map<String, dynamic> _$$QsoImplToJson(_$QsoImpl instance) => <String, dynamic>{
       'id': instance.id,
       'callSign': instance.callSign,
-      'location': instance.location,
+      'location': instance.location.toJson(),
       'date': const DateTimeConverter().toJson(instance.date),
       'startTime': _$JsonConverterToJson<Timestamp, DateTime>(
           instance.startTime, const DateTimeConverter().toJson),

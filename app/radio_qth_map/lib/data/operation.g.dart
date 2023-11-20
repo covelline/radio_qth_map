@@ -23,7 +23,7 @@ Map<String, dynamic> _$$OperationImplToJson(_$OperationImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'callsign': instance.callsign,
-      'location': instance.location,
+      'location': instance.location.toJson(),
       'startTime': _$JsonConverterToJson<Timestamp, DateTime>(
           instance.startTime, const DateTimeConverter().toJson),
       'endTime': _$JsonConverterToJson<Timestamp, DateTime>(

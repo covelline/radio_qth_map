@@ -10,9 +10,9 @@ _$AmateurRadioOperationInfoImpl _$$AmateurRadioOperationInfoImplFromJson(
         Map<String, dynamic> json) =>
     _$AmateurRadioOperationInfoImpl(
       id: json['id'] as String?,
-      mode: $enumDecode(_$AmateurRadioModeEnumMap, json['mode']),
+      mode: $enumDecodeNullable(_$AmateurRadioModeEnumMap, json['mode']),
       band: AmateurRadioBandInfo.fromJson(json['band'] as Map<String, dynamic>),
-      powerOutput: (json['powerOutput'] as num).toDouble(),
+      powerOutput: (json['powerOutput'] as num?)?.toDouble(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -20,8 +20,8 @@ Map<String, dynamic> _$$AmateurRadioOperationInfoImplToJson(
         _$AmateurRadioOperationInfoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'mode': _$AmateurRadioModeEnumMap[instance.mode]!,
-      'band': instance.band,
+      'mode': _$AmateurRadioModeEnumMap[instance.mode],
+      'band': instance.band.toJson(),
       'powerOutput': instance.powerOutput,
       'runtimeType': instance.$type,
     };

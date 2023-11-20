@@ -1,5 +1,7 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:radio_qth_map/data/datetime_converter.dart';
+import 'package:radio_qth_map/data/json_converters.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,6 +11,7 @@ part 'operation.g.dart';
 /// 無線業務の運用
 @freezed
 class Operation with _$Operation {
+  @JsonSerializable(explicitToJson: true)
   const factory Operation({
     /// firestoreのID
     String? id,

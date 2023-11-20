@@ -212,7 +212,8 @@ class __$$QsoImplCopyWithImpl<$Res> extends _$QsoCopyWithImpl<$Res, _$QsoImpl>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$QsoImpl implements _Qso {
   const _$QsoImpl(
       {this.id,

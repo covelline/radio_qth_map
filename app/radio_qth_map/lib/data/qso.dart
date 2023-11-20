@@ -1,5 +1,7 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:radio_qth_map/data/datetime_converter.dart';
+import 'package:radio_qth_map/data/json_converters.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,6 +11,7 @@ part 'qso.g.dart';
 /// QSOの情報コレクション
 @freezed
 class Qso with _$Qso {
+  @JsonSerializable(explicitToJson: true)
   const factory Qso({
     /// firestoreのID
     String? id,
