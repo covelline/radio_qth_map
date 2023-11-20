@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
+import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
+import 'package:radio_qth_map/widget/date_time_ext.dart';
 
 class AddOperationScreen extends StatefulWidget {
   const AddOperationScreen({Key? key}) : super(key: key);
@@ -25,7 +27,15 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
         title: Text(AppLocalizations.of(context)!.add_qso),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _logList.isEmpty ? null : () {},
+        onPressed: _logList.isEmpty
+            ? null
+            : () async {
+                final repository = FirestoreRepository.of(context);
+                await repository.storeOperations(_logList);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
         label: Text(AppLocalizations.of(context)!.publish_log),
         icon: const Icon(Icons.publish),
         tooltip: AppLocalizations.of(context)!.publish_log_tooltip,
@@ -80,10 +90,10 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                     otherLongitude: double.tryParse(
                       otherStationInfo.longitudeController.text,
                     ),
-                    startTime: DateTime.tryParse(
+                    startTime: DateTimeExtension.tryParseUTC(
                       otherStationInfo.startController.text,
                     ),
-                    endTime: DateTime.tryParse(
+                    endTime: DateTimeExtension.tryParseUTC(
                       otherStationInfo.endController.text,
                     ),
                     srst: int.tryParse(
