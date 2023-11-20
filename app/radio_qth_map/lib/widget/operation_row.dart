@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'operation_row.freezed.dart';
 
@@ -61,17 +62,18 @@ class OperationRow extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Delete'),
-              content: const Text('Are you sure you want to delete?'),
+              title: Text(AppLocalizations.of(context)!.delete),
+              content: Text(AppLocalizations.of(context)!
+                  .delete_operation_confirm_message),
               actions: [
                 TextButton(
-                  child: const Text('Cancel'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: const Text('Delete'),
+                  child: Text(AppLocalizations.of(context)!.delete),
                   onPressed: () {
                     onTapDelete?.call();
                     Navigator.of(context).pop();
