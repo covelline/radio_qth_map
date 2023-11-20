@@ -17,6 +17,7 @@
   "mode": "Mode",
   "my_statio_settings": "My station settings",
   "other_station_settings": "Other station settings",
+  "power": "Power",
   "publish_log": "Publish log",
   "publish_log_tooltip": "To publish logs, please add logs",
   "start": "Start",

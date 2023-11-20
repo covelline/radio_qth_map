@@ -68,6 +68,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                     ),
                     band: myOperationInfo.band,
                     mode: myOperationInfo.mode,
+                    power: double.tryParse(
+                      myOperationInfo.powerController.text,
+                    ),
                     otherCallsign: otherStationInfo.callsignController.text,
                     otherGridlocator:
                         otherStationInfo.gridlocatorController.text,
@@ -145,6 +148,7 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
   final frequencyController = TextEditingController();
   AmateurRadioBand? band;
   AmateurRadioMode? mode;
+  final powerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +283,16 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                     });
                   },
                 ),
-              )
+              ),
+              ResponsiveRowColumnItem(
+                rowFlex: 1,
+                child: TextFormField(
+                  controller: powerController,
+                  decoration: InputDecoration(
+                    labelText: '${AppLocalizations.of(context)!.power} W',
+                  ),
+                ),
+              ),
             ],
           )
         ],

@@ -23,6 +23,7 @@ mixin _$OperationRowData {
   double? get frequency => throw _privateConstructorUsedError;
   AmateurRadioBand? get band => throw _privateConstructorUsedError;
   AmateurRadioMode? get mode => throw _privateConstructorUsedError;
+  double? get power => throw _privateConstructorUsedError;
   String? get otherCallsign => throw _privateConstructorUsedError;
   String? get otherGridlocator => throw _privateConstructorUsedError;
   double? get otherLatitude => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $OperationRowDataCopyWith<$Res> {
       double? frequency,
       AmateurRadioBand? band,
       AmateurRadioMode? mode,
+      double? power,
       String? otherCallsign,
       String? otherGridlocator,
       double? otherLatitude,
@@ -81,6 +83,7 @@ class _$OperationRowDataCopyWithImpl<$Res, $Val extends OperationRowData>
     Object? frequency = freezed,
     Object? band = freezed,
     Object? mode = freezed,
+    Object? power = freezed,
     Object? otherCallsign = freezed,
     Object? otherGridlocator = freezed,
     Object? otherLatitude = freezed,
@@ -119,6 +122,10 @@ class _$OperationRowDataCopyWithImpl<$Res, $Val extends OperationRowData>
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
               as AmateurRadioMode?,
+      power: freezed == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as double?,
       otherCallsign: freezed == otherCallsign
           ? _value.otherCallsign
           : otherCallsign // ignore: cast_nullable_to_non_nullable
@@ -171,6 +178,7 @@ abstract class _$$OperationRowDataImplCopyWith<$Res>
       double? frequency,
       AmateurRadioBand? band,
       AmateurRadioMode? mode,
+      double? power,
       String? otherCallsign,
       String? otherGridlocator,
       double? otherLatitude,
@@ -199,6 +207,7 @@ class __$$OperationRowDataImplCopyWithImpl<$Res>
     Object? frequency = freezed,
     Object? band = freezed,
     Object? mode = freezed,
+    Object? power = freezed,
     Object? otherCallsign = freezed,
     Object? otherGridlocator = freezed,
     Object? otherLatitude = freezed,
@@ -237,6 +246,10 @@ class __$$OperationRowDataImplCopyWithImpl<$Res>
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
               as AmateurRadioMode?,
+      power: freezed == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as double?,
       otherCallsign: freezed == otherCallsign
           ? _value.otherCallsign
           : otherCallsign // ignore: cast_nullable_to_non_nullable
@@ -284,6 +297,7 @@ class _$OperationRowDataImpl implements _OperationRowData {
       this.frequency,
       this.band,
       this.mode,
+      this.power,
       this.otherCallsign,
       this.otherGridlocator,
       this.otherLatitude,
@@ -320,6 +334,8 @@ class _$OperationRowDataImpl implements _OperationRowData {
   @override
   final AmateurRadioMode? mode;
   @override
+  final double? power;
+  @override
   final String? otherCallsign;
   @override
   final String? otherGridlocator;
@@ -338,7 +354,7 @@ class _$OperationRowDataImpl implements _OperationRowData {
 
   @override
   String toString() {
-    return 'OperationRowData(myCallsign: $myCallsign, myGridlocator: $myGridlocator, myLatitude: $myLatitude, myLongitude: $myLongitude, frequency: $frequency, band: $band, mode: $mode, otherCallsign: $otherCallsign, otherGridlocator: $otherGridlocator, otherLatitude: $otherLatitude, otherLongitude: $otherLongitude, startTime: $startTime, endTime: $endTime, srst: $srst, rrst: $rrst)';
+    return 'OperationRowData(myCallsign: $myCallsign, myGridlocator: $myGridlocator, myLatitude: $myLatitude, myLongitude: $myLongitude, frequency: $frequency, band: $band, mode: $mode, power: $power, otherCallsign: $otherCallsign, otherGridlocator: $otherGridlocator, otherLatitude: $otherLatitude, otherLongitude: $otherLongitude, startTime: $startTime, endTime: $endTime, srst: $srst, rrst: $rrst)';
   }
 
   @override
@@ -358,6 +374,7 @@ class _$OperationRowDataImpl implements _OperationRowData {
                 other.frequency == frequency) &&
             (identical(other.band, band) || other.band == band) &&
             (identical(other.mode, mode) || other.mode == mode) &&
+            (identical(other.power, power) || other.power == power) &&
             (identical(other.otherCallsign, otherCallsign) ||
                 other.otherCallsign == otherCallsign) &&
             (identical(other.otherGridlocator, otherGridlocator) ||
@@ -383,6 +400,7 @@ class _$OperationRowDataImpl implements _OperationRowData {
       frequency,
       band,
       mode,
+      power,
       otherCallsign,
       otherGridlocator,
       otherLatitude,
@@ -409,6 +427,7 @@ abstract class _OperationRowData implements OperationRowData {
       final double? frequency,
       final AmateurRadioBand? band,
       final AmateurRadioMode? mode,
+      final double? power,
       final String? otherCallsign,
       final String? otherGridlocator,
       final double? otherLatitude,
@@ -432,6 +451,8 @@ abstract class _OperationRowData implements OperationRowData {
   AmateurRadioBand? get band;
   @override
   AmateurRadioMode? get mode;
+  @override
+  double? get power;
   @override
   String? get otherCallsign;
   @override

@@ -25,6 +25,7 @@ class OperationRowData with _$OperationRowData {
     double? frequency,
     AmateurRadioBand? band,
     AmateurRadioMode? mode,
+    double? power,
     String? otherCallsign,
     String? otherGridlocator,
     double? otherLatitude,
