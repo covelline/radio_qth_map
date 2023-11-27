@@ -28,22 +28,27 @@ class MapScreenState extends State<MapScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
+                enabled: false,
                 decoration: InputDecoration(hintText: 'Call Sign'),
                 // Implement onChange or controller
               ),
               TextField(
+                enabled: false,
                 decoration: InputDecoration(hintText: 'Start Time'),
                 // Implement onChange or controller
               ),
               TextField(
+                enabled: false,
                 decoration: InputDecoration(hintText: 'End Time'),
                 // Implement onChange or controller
               ),
               TextField(
+                enabled: false,
                 decoration: InputDecoration(hintText: 'Band'),
                 // Implement onChange or controller
               ),
               TextField(
+                enabled: false,
                 decoration: InputDecoration(hintText: 'Mode'),
                 // Implement onChange or controller
               ),
@@ -51,7 +56,7 @@ class MapScreenState extends State<MapScreen> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Search'),
+              child: Text(AppLocalizations.of(context)!.search),
               onPressed: () {
                 // Implement search logic
                 Navigator.of(context).pop();

@@ -20,6 +20,7 @@
   "power": "出力",
   "publish_log": "ログを公開する",
   "publish_log_tooltip": "ログを公開するには、ログを追加してください",
+  "search": "検索（現在未実装です）",
   "start": "開始",
   "time_error": "開始または終了時間は必須です"
 }

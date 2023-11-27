@@ -20,6 +20,7 @@
   "power": "Power",
   "publish_log": "Publish log",
   "publish_log_tooltip": "To publish logs, please add logs",
+  "search": "Search(Not yet implemented)",
   "start": "Start",
   "time_error": "Either Start or End is required"
 }
