@@ -32,50 +32,207 @@ extension AmateurRadioBandExtension on AmateurRadioBandInfo {
   String get description {
     switch (this) {
       case _AmateurRadioBandInfoBand(band: final band):
-        return band.toString();
+        return band.name;
       case _AmateureRadioBandInfoFrequency(frequency: final frequency):
-        return '$frequency MHz';
+        return '$frequency kHz';
       case _AmateureRadioBandInfoBandAndFrequency(
           band: final band,
           frequency: final frequency
         ):
-        return '${band.toString()} ($frequency MHz)';
+        return '${band.name} ($frequency kHz)';
     }
   }
 }
 
 enum AmateurRadioBand {
-  Band2190m,
-  Band630m,
-  Band560m,
-  Band160m,
-  Band80m,
-  Band60m,
-  Band40m,
-  Band30m,
-  Band20m,
-  Band17m,
-  Band15m,
-  Band12m,
-  Band10m,
-  Band8m,
-  Band6m,
-  Band5m,
-  Band4m,
-  Band2m,
-  Band1_25m,
-  Band70cm,
-  Band33cm,
-  Band23cm,
-  Band13cm,
-  Band9cm,
-  Band6cm,
-  Band3cm,
-  Band1_25cm,
-  Band6mm,
-  Band4mm,
-  Band2_5mm,
-  Band2mm,
-  Band1mm,
-  submm,
+  Band2190m(
+    lowerFrequency: 135.7,
+    upperFrequency: 137.8,
+    name: '2190m',
+  ),
+  Band630m(
+    lowerFrequency: 472,
+    upperFrequency: 479,
+    name: '630m',
+  ),
+  Band560m(
+    lowerFrequency: 501,
+    upperFrequency: 504,
+    name: '560m',
+  ),
+  Band160m(
+    lowerFrequency: 1800,
+    upperFrequency: 2000,
+    name: '160m',
+  ),
+  Band80m(
+    lowerFrequency: 3500,
+    upperFrequency: 4000,
+    name: '80m',
+  ),
+  Band60m(
+    lowerFrequency: 5060,
+    upperFrequency: 5450,
+    name: '60m',
+  ),
+  Band40m(
+    lowerFrequency: 7000,
+    upperFrequency: 7300,
+    name: '40m',
+  ),
+  Band30m(
+    lowerFrequency: 10100,
+    upperFrequency: 10150,
+    name: '30m',
+  ),
+  Band20m(
+    lowerFrequency: 14000,
+    upperFrequency: 14350,
+    name: '20m',
+  ),
+  Band17m(
+    lowerFrequency: 18068,
+    upperFrequency: 18168,
+    name: '17m',
+  ),
+  Band15m(
+    lowerFrequency: 21000,
+    upperFrequency: 21450,
+    name: '15m',
+  ),
+  Band12m(
+    lowerFrequency: 24890,
+    upperFrequency: 24990,
+    name: '12m',
+  ),
+  Band10m(
+    lowerFrequency: 28000,
+    upperFrequency: 29700,
+    name: '10m',
+  ),
+  Band8m(
+    lowerFrequency: 40000,
+    upperFrequency: 45000,
+    name: '8m',
+  ),
+  Band6m(
+    lowerFrequency: 50000,
+    upperFrequency: 54000,
+    name: '6m',
+  ),
+  Band5m(
+    lowerFrequency: 54000.001,
+    upperFrequency: 69900,
+    name: '5m',
+  ),
+  Band4m(
+    lowerFrequency: 70000,
+    upperFrequency: 71000,
+    name: '4m',
+  ),
+  Band2m(
+    lowerFrequency: 144000,
+    upperFrequency: 148000,
+    name: '2m',
+  ),
+  Band1_25m(
+    lowerFrequency: 222000,
+    upperFrequency: 225000,
+    name: '1.25m',
+  ),
+  Band70cm(
+    lowerFrequency: 420000,
+    upperFrequency: 450000,
+    name: '70cm',
+  ),
+  Band33cm(
+    lowerFrequency: 902000,
+    upperFrequency: 928000,
+    name: '33cm',
+  ),
+  Band23cm(
+    lowerFrequency: 1240000,
+    upperFrequency: 1300000,
+    name: '23cm',
+  ),
+  Band13cm(
+    lowerFrequency: 2300000,
+    upperFrequency: 2450000,
+    name: '13cm',
+  ),
+  Band9cm(
+    lowerFrequency: 3300000,
+    upperFrequency: 3500000,
+    name: '9cm',
+  ),
+  Band6cm(
+    lowerFrequency: 5650000,
+    upperFrequency: 5925000,
+    name: '6cm',
+  ),
+  Band3cm(
+    lowerFrequency: 10000000,
+    upperFrequency: 10500000,
+    name: '3cm',
+  ),
+  Band1_25cm(
+    lowerFrequency: 24000000,
+    upperFrequency: 24250000,
+    name: '1.25cm',
+  ),
+  Band6mm(
+    lowerFrequency: 47000000,
+    upperFrequency: 47200000,
+    name: '6mm',
+  ),
+  Band4mm(
+    lowerFrequency: 75500000,
+    upperFrequency: 81000000,
+    name: '4mm',
+  ),
+  Band2_5mm(
+    lowerFrequency: 119980000,
+    upperFrequency: 123000000,
+    name: '2.5mm',
+  ),
+  Band2mm(
+    lowerFrequency: 134000000,
+    upperFrequency: 149000000,
+    name: '2mm',
+  ),
+  Band1mm(
+    lowerFrequency: 241000000,
+    upperFrequency: 250000000,
+    name: '1mm',
+  ),
+  submm(
+    lowerFrequency: 300000000,
+    upperFrequency: 7500000000,
+    name: 'submm',
+  ),
+  ;
+
+  const AmateurRadioBand({
+    required this.lowerFrequency,
+    required this.upperFrequency,
+    required this.name,
+  });
+
+  /// 下限周波数(kHz)
+  final double lowerFrequency;
+
+  /// 上限周波数(kHz)
+  final double upperFrequency;
+  final String name;
+
+  /// 周波数からBandを取得する
+  static AmateurRadioBand? fromFrequency(double frequency) {
+    for (var band in AmateurRadioBand.values) {
+      if (band.lowerFrequency <= frequency &&
+          frequency <= band.upperFrequency) {
+        return band;
+      }
+    }
+    return null;
+  }
 }

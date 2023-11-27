@@ -238,30 +238,48 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 1,
-                child: TextFormField(
-                  controller: frequencyController,
-                  decoration: InputDecoration(
-                    labelText: '${AppLocalizations.of(context)!.frequency} kHz',
-                  ),
-                  validator: (value) {
-                    final frequencyValidated =
-                        double.tryParse(value ?? '') != null;
-                    final bandValidated = band != null;
-                    if (frequencyValidated || bandValidated) {
-                      return null;
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    if (!hasFocus) {
+                      final frequency = double.tryParse(
+                            frequencyController.text,
+                          ) ??
+                          0;
+                      final newBand = AmateurRadioBand.fromFrequency(frequency);
+                      setState(() {
+                        if (newBand != null) {
+                          band = newBand;
+                        }
+                      });
                     }
-                    return AppLocalizations.of(context)!.frequency_error;
                   },
+                  child: TextFormField(
+                    controller: frequencyController,
+                    decoration: InputDecoration(
+                      labelText:
+                          '${AppLocalizations.of(context)!.frequency} kHz',
+                    ),
+                    validator: (value) {
+                      final frequencyValidated =
+                          double.tryParse(value ?? '') != null;
+                      final bandValidated = band != null;
+                      if (frequencyValidated || bandValidated) {
+                        return null;
+                      }
+                      return AppLocalizations.of(context)!.frequency_error;
+                    },
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(
                 rowFlex: 1,
                 child: DropdownButtonFormField(
+                  value: band,
                   items: [
                     for (final band in AmateurRadioBand.values)
                       DropdownMenuItem(
                         value: band,
-                        child: Text(band.toString()),
+                        child: Text(band.name),
                       )
                   ],
                   hint: Text(
