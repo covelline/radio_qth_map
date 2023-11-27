@@ -53,7 +53,7 @@ extension OperationInfoExtension on OperationInfo {
           band: final band,
           powerOutput: final powerOutput,
         ):
-        return 'Mode: ${mode?.toString() ?? 'Unknown'}, Band: ${band.description}, Power output: ${powerOutput ?? 'Unknown'}';
+        return 'Mode: ${mode?.name ?? 'Unknown'}, Band: ${band.description}, Power output: ${powerOutput ?? 'Unknown'}';
       case FreeLicenseRadioOperationInfo(
           id: _,
           mode: final mode,

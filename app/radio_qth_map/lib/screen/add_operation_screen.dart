@@ -299,7 +299,7 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                     for (final mode in AmateurRadioMode.values)
                       DropdownMenuItem(
                         value: mode,
-                        child: Text(mode.toString()),
+                        child: Text(mode.name),
                       )
                   ],
                   hint: Text(
