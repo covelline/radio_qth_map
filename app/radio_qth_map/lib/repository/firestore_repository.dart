@@ -124,6 +124,17 @@ class FirestoreRepository {
   Stream<List<QsoWithOperation>> qsoWithOperation({
     required String operationId,
   }) {
+    final subscriptions = <StreamSubscription>[];
+    final controller = StreamController<List<QsoWithOperation>>(
+      onCancel: () {
+        for (var subscription in subscriptions) {
+          subscription.cancel();
+        }
+        subscriptions.clear();
+      },
+    );
+    final qsoWithOperations = <QsoWithOperation>[];
+
     final operationInfoStream = firestore
         .collection('operation/$operationId/info')
         .snapshots()
@@ -134,14 +145,13 @@ class FirestoreRepository {
         return operationInfo;
       }).toList();
     });
-    final qsoStream = operationInfoStream.asyncExpand((operationInfoList) {
-      return Stream.fromIterable(operationInfoList)
-          .asyncExpand((operationInfo) {
-        return firestore
+    subscriptions.add(operationInfoStream.listen((event) {
+      for (var operationInfo in event) {
+        final subscription = firestore
             .collection('operation/$operationId/info/${operationInfo.id}/qso')
             .snapshots()
-            .map((snapshot) {
-          return snapshot.docs.map((doc) {
+            .listen((qsos) {
+          final qsoWithOps = qsos.docs.map((doc) {
             final data = doc.data();
             final qso = Qso.fromJson(doc.id, data);
             return QsoWithOperation(
@@ -149,9 +159,12 @@ class FirestoreRepository {
               operationInfo: operationInfo,
             );
           }).toList();
+          qsoWithOperations.addAll(qsoWithOps);
+          controller.add(qsoWithOperations);
         });
-      });
-    });
-    return qsoStream;
+        subscriptions.add(subscription);
+      }
+    }));
+    return controller.stream;
   }
 }
