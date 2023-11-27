@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/data/operation_info.dart';
 import 'package:radio_qth_map/data/qso.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OperationMap extends StatefulWidget {
   const OperationMap({
@@ -26,12 +28,16 @@ class OperationMapState extends State<OperationMap> {
   late StreamSubscription<List<Operation>> _operationSubscription;
   StreamSubscription<List<QsoWithOperation>>? _qsoWithOperationSubscription;
   late GoogleMapController _mapController;
+  late DateFormat _dateFormat;
   var _operationMarkers = <Marker>{};
   var _visibleMarkers = <Marker>{};
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _dateFormat =
+        DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).add_Hms();
+
     final repository = FirestoreRepository.of(context);
     _operationSubscription = repository.operations.listen((operations) {
       setState(() {
@@ -45,7 +51,7 @@ class OperationMapState extends State<OperationMap> {
               snippet: """
 ${operation.location.description}
 <br/>
-${operation.dateTime.toIso8601String()}
+${_dateFormat.format(operation.dateTime)}
 """,
             ),
             consumeTapEvents: true,
@@ -88,7 +94,7 @@ ${e.qso.location.description}
 <br/>
 ${e.operationInfo.description}
 <br />
-${e.qso.date.toIso8601String()}
+${_dateFormat.format(e.qso.date)}
 """,
             ),
             icon: qsoMapIcon,

@@ -437,7 +437,9 @@ class _OtherStationInfoInputFormState
                 child: TextFormField(
                   controller: startController,
                   decoration: InputDecoration(
-                    labelText: '${AppLocalizations.of(context)!.start} GMT',
+                    labelText:
+                        '${AppLocalizations.of(context)!.start} GMT (2023-01-23 04:56:00)',
+                    hintText: '2023-01-23 04:56:00',
                   ),
                   validator: (value) {
                     final startValidated =
@@ -456,7 +458,9 @@ class _OtherStationInfoInputFormState
                 child: TextFormField(
                   controller: endController,
                   decoration: InputDecoration(
-                    labelText: '${AppLocalizations.of(context)!.end} GMT',
+                    labelText:
+                        '${AppLocalizations.of(context)!.end} GMT (2023-01-23 04:56:00)',
+                    hintText: '2023-01-23 04:56:00',
                   ),
                 ),
               )
