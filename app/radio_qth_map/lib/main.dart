@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:radio_qth_map/firebase_options.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/map_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -16,7 +18,10 @@ void main() async {
   runApp(
     FirestoreRepository(
       firestore: firestore,
-      child: const MyApp(),
+      child: ChangeNotifierProvider(
+        create: (_) => LocaleNotifier(const Locale("ja", "JP")),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -27,11 +32,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final localeNotifier = context.watch<LocaleNotifier>();
     return MaterialApp(
       title: 'Flutter Demo',
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('ja', 'JP'),
+      locale: localeNotifier.locale,
       theme: ThemeData(
         // This is the theme of your application.
         //

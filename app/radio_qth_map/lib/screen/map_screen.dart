@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/add_operation_screen.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:responsive_framework/max_width_box.dart';
@@ -82,6 +84,26 @@ class MapScreenState extends State<MapScreen> {
             icon: const Icon(Icons.search),
             onPressed: _showSearchDialog,
           ),
+          DropdownButton<Locale>(
+            value: Locale(AppLocalizations.of(context)!.localeName),
+            items: const [
+              DropdownMenuItem(
+                value: Locale('en'),
+                child: Text('English'),
+              ),
+              DropdownMenuItem(
+                value: Locale('ja'),
+                child: Text('日本語'),
+              ),
+            ],
+            onChanged: (newLocale) {
+              if (newLocale != null) {
+                setState(() {
+                  context.read<LocaleNotifier>().changeLocale(newLocale);
+                });
+              }
+            },
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
