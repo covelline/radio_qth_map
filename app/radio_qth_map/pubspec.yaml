@@ -22,6 +22,7 @@ dependencies:
   firebase_core: ^2.22.0
   cloud_firestore: ^4.13.1
   responsive_framework: ^1.1.1
+  latlong2: ^0.9.0
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +34,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - image/

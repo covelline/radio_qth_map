@@ -9,7 +9,7 @@ part 'operation_info.freezed.dart';
 part 'operation_info.g.dart';
 
 @freezed
-class OperationInfo with _$OperationInfo {
+sealed class OperationInfo with _$OperationInfo {
   @JsonSerializable(explicitToJson: true)
 
   /// アマチュア無線の運用情報
@@ -41,4 +41,24 @@ class OperationInfo with _$OperationInfo {
       _$OperationInfoFromJson(json).copyWith(
         id: id,
       );
+}
+
+extension OperationInfoExtension on OperationInfo {
+  /// 説明用テキスト
+  String get description {
+    switch (this) {
+      case AmateurRadioOperationInfo(
+          id: _,
+          mode: final mode,
+          band: final band,
+          powerOutput: final powerOutput,
+        ):
+        return 'Mode: ${mode?.toString() ?? 'Unknown'}, Band: ${band.description}, Power output: ${powerOutput ?? 'Unknown'}';
+      case FreeLicenseRadioOperationInfo(
+          id: _,
+          mode: final mode,
+        ):
+        return 'Mode: ${mode.toString()}';
+    }
+  }
 }

@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:radio_qth_map/data/json_converters.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:radio_qth_map/data/operation_info.dart';
 
 part 'qso.freezed.dart';
 part 'qso.g.dart';
@@ -42,4 +43,13 @@ class Qso with _$Qso {
       _$QsoFromJson(json).copyWith(
         id: id,
       );
+}
+
+/// QSO情報と運用情報のデータをまとめたもの
+@freezed
+class QsoWithOperation with _$QsoWithOperation {
+  const factory QsoWithOperation({
+    required Qso qso,
+    required OperationInfo operationInfo,
+  }) = _QsoWithOperation;
 }

@@ -358,3 +358,165 @@ abstract class _Qso implements Qso {
   _$$QsoImplCopyWith<_$QsoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$QsoWithOperation {
+  Qso get qso => throw _privateConstructorUsedError;
+  OperationInfo get operationInfo => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $QsoWithOperationCopyWith<QsoWithOperation> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QsoWithOperationCopyWith<$Res> {
+  factory $QsoWithOperationCopyWith(
+          QsoWithOperation value, $Res Function(QsoWithOperation) then) =
+      _$QsoWithOperationCopyWithImpl<$Res, QsoWithOperation>;
+  @useResult
+  $Res call({Qso qso, OperationInfo operationInfo});
+
+  $QsoCopyWith<$Res> get qso;
+  $OperationInfoCopyWith<$Res> get operationInfo;
+}
+
+/// @nodoc
+class _$QsoWithOperationCopyWithImpl<$Res, $Val extends QsoWithOperation>
+    implements $QsoWithOperationCopyWith<$Res> {
+  _$QsoWithOperationCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? qso = null,
+    Object? operationInfo = null,
+  }) {
+    return _then(_value.copyWith(
+      qso: null == qso
+          ? _value.qso
+          : qso // ignore: cast_nullable_to_non_nullable
+              as Qso,
+      operationInfo: null == operationInfo
+          ? _value.operationInfo
+          : operationInfo // ignore: cast_nullable_to_non_nullable
+              as OperationInfo,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $QsoCopyWith<$Res> get qso {
+    return $QsoCopyWith<$Res>(_value.qso, (value) {
+      return _then(_value.copyWith(qso: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $OperationInfoCopyWith<$Res> get operationInfo {
+    return $OperationInfoCopyWith<$Res>(_value.operationInfo, (value) {
+      return _then(_value.copyWith(operationInfo: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$QsoWithOperationImplCopyWith<$Res>
+    implements $QsoWithOperationCopyWith<$Res> {
+  factory _$$QsoWithOperationImplCopyWith(_$QsoWithOperationImpl value,
+          $Res Function(_$QsoWithOperationImpl) then) =
+      __$$QsoWithOperationImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({Qso qso, OperationInfo operationInfo});
+
+  @override
+  $QsoCopyWith<$Res> get qso;
+  @override
+  $OperationInfoCopyWith<$Res> get operationInfo;
+}
+
+/// @nodoc
+class __$$QsoWithOperationImplCopyWithImpl<$Res>
+    extends _$QsoWithOperationCopyWithImpl<$Res, _$QsoWithOperationImpl>
+    implements _$$QsoWithOperationImplCopyWith<$Res> {
+  __$$QsoWithOperationImplCopyWithImpl(_$QsoWithOperationImpl _value,
+      $Res Function(_$QsoWithOperationImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? qso = null,
+    Object? operationInfo = null,
+  }) {
+    return _then(_$QsoWithOperationImpl(
+      qso: null == qso
+          ? _value.qso
+          : qso // ignore: cast_nullable_to_non_nullable
+              as Qso,
+      operationInfo: null == operationInfo
+          ? _value.operationInfo
+          : operationInfo // ignore: cast_nullable_to_non_nullable
+              as OperationInfo,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$QsoWithOperationImpl implements _QsoWithOperation {
+  const _$QsoWithOperationImpl(
+      {required this.qso, required this.operationInfo});
+
+  @override
+  final Qso qso;
+  @override
+  final OperationInfo operationInfo;
+
+  @override
+  String toString() {
+    return 'QsoWithOperation(qso: $qso, operationInfo: $operationInfo)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QsoWithOperationImpl &&
+            (identical(other.qso, qso) || other.qso == qso) &&
+            (identical(other.operationInfo, operationInfo) ||
+                other.operationInfo == operationInfo));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, qso, operationInfo);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QsoWithOperationImplCopyWith<_$QsoWithOperationImpl> get copyWith =>
+      __$$QsoWithOperationImplCopyWithImpl<_$QsoWithOperationImpl>(
+          this, _$identity);
+}
+
+abstract class _QsoWithOperation implements QsoWithOperation {
+  const factory _QsoWithOperation(
+      {required final Qso qso,
+      required final OperationInfo operationInfo}) = _$QsoWithOperationImpl;
+
+  @override
+  Qso get qso;
+  @override
+  OperationInfo get operationInfo;
+  @override
+  @JsonKey(ignore: true)
+  _$$QsoWithOperationImplCopyWith<_$QsoWithOperationImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

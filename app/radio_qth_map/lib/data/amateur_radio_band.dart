@@ -6,7 +6,7 @@ part 'amateur_radio_band.g.dart';
 
 /// 運用バンド・周波数を表すオブジェクト
 @freezed
-class AmateurRadioBandInfo with _$AmateurRadioBandInfo {
+sealed class AmateurRadioBandInfo with _$AmateurRadioBandInfo {
   /// バンド情報のみ
   const factory AmateurRadioBandInfo.band({
     required AmateurRadioBand band,
@@ -25,6 +25,23 @@ class AmateurRadioBandInfo with _$AmateurRadioBandInfo {
 
   factory AmateurRadioBandInfo.fromJson(Map<String, dynamic> json) =>
       _$AmateurRadioBandInfoFromJson(json);
+}
+
+extension AmateurRadioBandExtension on AmateurRadioBandInfo {
+  /// 説明用テキスト
+  String get description {
+    switch (this) {
+      case _AmateurRadioBandInfoBand(band: final band):
+        return band.toString();
+      case _AmateureRadioBandInfoFrequency(frequency: final frequency):
+        return '$frequency MHz';
+      case _AmateureRadioBandInfoBandAndFrequency(
+          band: final band,
+          frequency: final frequency
+        ):
+        return '${band.toString()} ($frequency MHz)';
+    }
+  }
 }
 
 enum AmateurRadioBand {

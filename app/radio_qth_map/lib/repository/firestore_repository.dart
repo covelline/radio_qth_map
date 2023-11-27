@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
@@ -24,6 +26,16 @@ class FirestoreRepository extends InheritedWidget {
         context.dependOnInheritedWidgetOfExactType<FirestoreRepository>();
     assert(result != null, 'No FirestoreRepository found in context');
     return result!;
+  }
+
+  Stream<List<Operation>> get operations {
+    return firestore.collection('operation').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final operation = Operation.fromJson(doc.id, data);
+        return operation;
+      }).toList();
+    });
   }
 
   Future<void> storeOperations(List<OperationRowData> operations) async {
@@ -119,6 +131,40 @@ class FirestoreRepository extends InheritedWidget {
       }
     }
     await batch.commit();
+  }
+
+  Stream<List<QsoWithOperation>> qsoWithOperation({
+    required String operationId,
+  }) {
+    final operationInfoStream = firestore
+        .collection('operation/$operationId/info')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final operationInfo = OperationInfo.fromJson(doc.id, data);
+        return operationInfo;
+      }).toList();
+    });
+    final qsoStream = operationInfoStream.asyncExpand((operationInfoList) {
+      return Stream.fromIterable(operationInfoList)
+          .asyncExpand((operationInfo) {
+        return firestore
+            .collection('operation/$operationId/info/${operationInfo.id}/qso')
+            .snapshots()
+            .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            final qso = Qso.fromJson(doc.id, data);
+            return QsoWithOperation(
+              qso: qso,
+              operationInfo: operationInfo,
+            );
+          }).toList();
+        });
+      });
+    });
+    return qsoStream;
   }
 
   @override
