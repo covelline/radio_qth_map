@@ -47,6 +47,8 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             Text(AppLocalizations.of(context)!.my_statio_settings),
             _MyOperationInfoInputForm(
               key: _myOperationInfoKey,
+              // 1運用1コールサインなので、運用情報がある場合はコールサインを変更できないようにする
+              canChangeCallsign: _logList.isEmpty,
             ),
             const SizedBox(
               height: 8,
@@ -140,7 +142,11 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
 }
 
 class _MyOperationInfoInputForm extends StatefulWidget {
-  const _MyOperationInfoInputForm({Key? key}) : super(key: key);
+  const _MyOperationInfoInputForm({
+    Key? key,
+    required this.canChangeCallsign,
+  }) : super(key: key);
+  final bool canChangeCallsign;
 
   @override
   State<StatefulWidget> createState() {
@@ -175,6 +181,7 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
               ResponsiveRowColumnItem(
                 rowFlex: 1,
                 child: TextFormField(
+                  enabled: widget.canChangeCallsign,
                   controller: callsignController,
                   decoration: InputDecoration(
                     labelText: '${AppLocalizations.of(context)!.callsign}*',
