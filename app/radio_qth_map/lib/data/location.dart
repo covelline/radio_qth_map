@@ -44,7 +44,7 @@ extension LocationExtension on Location {
     const distance = latlong2.Distance();
     return distance.as(
         latlong2.LengthUnit.Kilometer,
-        latlong2.LatLng(latLng.latitude, latLng.latitude),
+        latlong2.LatLng(latLng.latitude, latLng.longitude),
         latlong2.LatLng(otherLatLng.latitude, otherLatLng.longitude));
   }
 
