@@ -16,12 +16,15 @@ void main() async {
   final firestore = FirebaseFirestore.instance;
   firestore.useFirestoreEmulator('localhost', 8080);
   runApp(
-    FirestoreRepository(
-      firestore: firestore,
-      child: ChangeNotifierProvider(
-        create: (_) => LocaleNotifier(const Locale("ja", "JP")),
-        child: const MyApp(),
-      ),
+    MultiProvider(
+      providers: [
+        Provider(
+          create: (_) => FirestoreRepository(firestore: firestore),
+        ),
+        ChangeNotifierProvider(
+            create: (_) => LocaleNotifier(const Locale("ja", "JP"))),
+      ],
+      child: const MyApp(),
     ),
   );
 }

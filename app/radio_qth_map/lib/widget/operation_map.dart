@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/data/operation_info.dart';
@@ -38,7 +39,7 @@ class OperationMapState extends State<OperationMap> {
     _dateFormat =
         DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).add_Hms();
 
-    final repository = FirestoreRepository.of(context);
+    final repository = context.read<FirestoreRepository>();
     _operationSubscription = repository.operations.listen((operations) {
       setState(() {
         _operationMarkers = operations.map((operation) {
@@ -71,7 +72,7 @@ ${_dateFormat.format(operation.dateTime)}
 
   void _subscribeQSOs(Operation operation) async {
     _qsoWithOperationSubscription?.cancel();
-    final repository = FirestoreRepository.of(context);
+    final repository = context.read<FirestoreRepository>();
     final qsoMapIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(48, 48)),
       'image/marker.png',

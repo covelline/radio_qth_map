@@ -10,23 +10,11 @@ import 'package:radio_qth_map/data/qso.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 
 @immutable
-class FirestoreRepository extends InheritedWidget {
+class FirestoreRepository {
   const FirestoreRepository({
-    Key? key,
     required this.firestore,
-    required Widget child,
-  }) : super(
-          key: key,
-          child: child,
-        );
+  });
   final FirebaseFirestore firestore;
-
-  static FirestoreRepository of(BuildContext context) {
-    final FirestoreRepository? result =
-        context.dependOnInheritedWidgetOfExactType<FirestoreRepository>();
-    assert(result != null, 'No FirestoreRepository found in context');
-    return result!;
-  }
 
   Stream<List<Operation>> get operations {
     return firestore.collection('operation').snapshots().map((snapshot) {
@@ -165,10 +153,5 @@ class FirestoreRepository extends InheritedWidget {
       });
     });
     return qsoStream;
-  }
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return true;
   }
 }
