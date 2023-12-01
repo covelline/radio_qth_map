@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:latlong2/latlong.dart' as latlong2;
+import 'package:latlong2/latlong.dart';
 
 part 'location.freezed.dart';
 part 'location.g.dart';
@@ -41,11 +40,11 @@ extension LocationExtension on Location {
     final latLng = this.latLng;
     final otherLatLng = other.latLng;
     // 緯度経度から距離を計算する
-    const distance = latlong2.Distance();
+    const distance = Distance();
     return distance.as(
-        latlong2.LengthUnit.Kilometer,
-        latlong2.LatLng(latLng.latitude, latLng.longitude),
-        latlong2.LatLng(otherLatLng.latitude, otherLatLng.longitude));
+        LengthUnit.Kilometer,
+        LatLng(latLng.latitude, latLng.longitude),
+        LatLng(otherLatLng.latitude, otherLatLng.longitude));
   }
 
   // 説明用のテキスト

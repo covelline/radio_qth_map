@@ -1,16 +1,19 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/location.dart';
 import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/data/operation_info.dart';
 import 'package:radio_qth_map/data/qso.dart';
-import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:radio_qth_map/widget/infomation_marker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OperationMap extends StatefulWidget {
   const OperationMap({
@@ -25,13 +28,23 @@ class OperationMap extends StatefulWidget {
   OperationMapState createState() => OperationMapState();
 }
 
-class OperationMapState extends State<OperationMap> {
+class OperationMapState extends State<OperationMap>
+    with TickerProviderStateMixin {
   late StreamSubscription<List<Operation>> _operationSubscription;
   StreamSubscription<List<QsoWithOperation>>? _qsoWithOperationSubscription;
-  late GoogleMapController _mapController;
+  final _mapController = MapController();
   late DateFormat _dateFormat;
-  var _operationMarkers = <Marker>{};
-  var _visibleMarkers = <Marker>{};
+
+  Operation? _selectedOperation;
+  QsoWithOperation? _selectedQsoWithOperation;
+
+  var _operationMarkers = <Marker>[]; // オペレーションのマーカー
+  var _visibleMarkers = <Marker>[]; // 表示するマーカー
+  var _distanceLines = <Polyline>[]; // 距離を表示する線
+
+  static const _startedId = 'AnimatedMapController#MoveStarted';
+  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const _finishedId = 'AnimatedMapController#MoveFinished';
 
   @override
   void didChangeDependencies() {
@@ -43,81 +56,245 @@ class OperationMapState extends State<OperationMap> {
     _operationSubscription = repository.operations.listen((operations) {
       setState(() {
         _operationMarkers = operations.map((operation) {
-          final markerId = MarkerId(operation.id!);
           return Marker(
-            markerId: markerId,
-            position: operation.location.latLng,
-            infoWindow: InfoWindow(
-              title: operation.callsign,
-              snippet: """
-${operation.location.description}
-<br/>
-${_dateFormat.format(operation.dateTime)}
-""",
-            ),
-            consumeTapEvents: true,
-            onTap: () async {
-              _mapController.showMarkerInfoWindow(markerId);
-              _mapController.animateCamera(CameraUpdate.newLatLngZoom(
+            point: operation.location.latLng,
+            child: GestureDetector(
+              onTap: () {
+                _selectedOperation = operation;
+                _showOperationDetail();
+                _subscribeQSOs();
+                _animatedMapMove(
                   operation.location.latLng,
-                  max(8, await _mapController.getZoomLevel())));
-              _subscribeQSOs(operation);
-            },
+                  10,
+                );
+              },
+              child: const Icon(
+                Icons.location_pin,
+                size: 60,
+                color: Colors.red,
+              ),
+            ),
+            width: 60,
+            height: 60,
           );
-        }).toSet();
+        }).toList();
         _visibleMarkers = _operationMarkers;
       });
     });
   }
 
-  void _subscribeQSOs(Operation operation) async {
+  void _subscribeQSOs() async {
+    assert(_selectedOperation != null);
+    final operation = _selectedOperation!;
     _qsoWithOperationSubscription?.cancel();
     final repository = context.read<FirestoreRepository>();
-    final qsoMapIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)),
-      'image/marker.png',
-    );
     // 選択したオペレーションのQSOを表示する
     _qsoWithOperationSubscription = repository
         .qsoWithOperation(operationId: operation.id!)
         .listen((qsoWithOperations) {
+      // マーカーのコントローラーを保持しておいて、情報ウィンドウを閉じれるようにする
+      final infoController = List.generate(
+          qsoWithOperations.length, (_) => GlobalKey<InformationMarkerState>());
       setState(() {
+        // QSOWithOperationのマーカーと、選択されたOperationのマーカーを表示する
         _visibleMarkers = qsoWithOperations.map((e) {
-          final markerId = MarkerId(e.qso.id!);
+          final key = ValueKey(e.qso.id);
+          final infoControllerKey =
+              infoController[qsoWithOperations.indexOf(e)];
           return Marker(
-            markerId: markerId,
-            position: e.qso.location.latLng,
-            infoWindow: InfoWindow(
-              title:
-                  "${e.qso.callSign} (${e.qso.location.distanceTo(operation.location)} km)",
-              snippet: """
-${e.qso.location.description}
-<br/>
-${e.operationInfo.description}
-<br />
-${_dateFormat.format(e.qso.date)}
-""",
+            key: key,
+            point: e.qso.location.latLng,
+            child: InformationMarker(
+              key: infoControllerKey,
+              information: Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ListTile(
+                      title: Text(
+                          """${e.qso.location.description} ${e.qso.location.distanceTo(operation.location)}km"""),
+                      subtitle: Text(e.qso.callSign ?? ""),
+                      trailing: IconButton(
+                        onPressed: () {
+                          infoControllerKey.currentState?.dismissInfomation();
+                          setState(() {
+                            _selectedQsoWithOperation = null;
+                          });
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                          AppLocalizations.of(context)!.operation_date), // 運用日時
+                      subtitle: Text(_dateFormat.format(e.qso.date)),
+                    ),
+                    ListTile(
+                      title: Text(e.operationInfo.description),
+                    ),
+                  ],
+                ),
+              ),
+              markerChild: const Icon(
+                Icons.location_pin,
+                size: 60,
+                color: Colors.blue,
+              ),
+              onTap: () {
+                for (var element in infoController) {
+                  element.currentState?.dismissInfomation();
+                }
+                // 他のマーカーのピンが情報ウインドウに重ならないように、
+                // 選択したマーカーを最後に表示する
+                setState(() {
+                  final selectedIndex = _visibleMarkers
+                      .indexWhere((element) => element.key == key);
+                  final selectedMarker =
+                      _visibleMarkers.removeAt(selectedIndex);
+                  _visibleMarkers = _visibleMarkers..add(selectedMarker);
+                  _selectedQsoWithOperation = e;
+                  _showDistanceLine();
+                });
+              },
             ),
-            icon: qsoMapIcon,
+            width: 256,
+            height: 256,
           );
-        }).toSet()
-          ..add(
-            // 選択したオペレーションのマーカーも表示する
-            _operationMarkers
-                .firstWhere(
-                    (element) => element.markerId == MarkerId(operation.id!))
-                .clone(),
+        }).toList()
+          ..insert(
+            0,
+            Marker(
+              point: operation.location.latLng,
+              child: const Icon(
+                Icons.location_pin,
+                size: 60,
+                color: Colors.red,
+              ),
+              width: 60,
+              height: 60,
+            ),
           );
         widget.onOperationSelected();
       });
     });
   }
 
-  /// バックキーが押された時のイベント
-  void onBackButtonPressed() {
+  void _showOperationDetail() async {
+    assert(_selectedOperation != null);
+    final operation = _selectedOperation!;
+    final sheetController = showBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: Scaffold(
+              appBar: AppBar(
+                title: Text(operation.callsign),
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+              body: ListView(
+                children: [
+                  ListTile(
+                    title:
+                        Text(AppLocalizations.of(context)!.operation_location),
+                    subtitle: Text(operation.location.description),
+                  ),
+                  ListTile(
+                    title: Text(AppLocalizations.of(context)!.operation_date),
+                    subtitle: Text(_dateFormat.format(operation.dateTime)),
+                  ),
+                ],
+              )),
+        );
+      },
+    );
+    await sheetController.closed;
+    // ボトムシートが閉じたら、全ての選択状態を解除してオペレーション一覧を表示する
+    // ボトムシートの閉じる動作は色々な方法があるので、 `closed` で待つ
     setState(() {
       _visibleMarkers = _operationMarkers;
+      _selectedOperation = null;
+      _selectedQsoWithOperation = null;
+      _distanceLines = [];
     });
+  }
+
+  void _showDistanceLine() {
+    assert(_selectedOperation != null);
+    assert(_selectedQsoWithOperation != null);
+    final operation = _selectedOperation!;
+    final qsoWithOperation = _selectedQsoWithOperation!;
+    setState(() {
+      _distanceLines = [
+        Polyline(
+          points: [
+            operation.location.latLng,
+            qsoWithOperation.qso.location.latLng,
+          ],
+          strokeWidth: 2.0,
+          color: Colors.red,
+        ),
+      ];
+    });
+  }
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final camera = _mapController.camera;
+    final latTween = Tween<double>(
+        begin: camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    // Note this method of encoding the target destination is a workaround.
+    // When proper animated movement is supported (see #1263) we should be able
+    // to detect an appropriate animated movement event which contains the
+    // target zoom/center.
+    final startIdWithTarget =
+        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+    bool hasTriggeredMove = false;
+
+    controller.addListener(() {
+      final String id;
+      if (animation.value == 1.0) {
+        id = _finishedId;
+      } else if (!hasTriggeredMove) {
+        id = startIdWithTarget;
+      } else {
+        id = _inProgressId;
+      }
+
+      hasTriggeredMove |= _mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+        id: id,
+      );
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
   }
 
   @override
@@ -128,16 +305,36 @@ ${_dateFormat.format(e.qso.date)}
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      zoomControlsEnabled: false,
-      initialCameraPosition: const CameraPosition(
-        target: LatLng(0, 0),
-        zoom: 2,
+    return FlutterMap(
+      mapController: _mapController,
+      options: const MapOptions(
+        initialCenter: LatLng(0, 0),
+        initialZoom: 2,
       ),
-      markers: _visibleMarkers,
-      onMapCreated: (controller) {
-        _mapController = controller;
-      },
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: "com.covelline.radio_qth_map",
+          tileProvider: CancellableNetworkTileProvider(),
+        ),
+        PolylineLayer(
+          polylines: _distanceLines,
+        ),
+        MarkerLayer(
+          markers: _visibleMarkers,
+        ),
+        RichAttributionWidget(
+          attributions: [
+            TextSourceAttribution(
+              'OpenStreetMap contributors',
+              onTap: () => launchUrl(
+                Uri.parse('https://openstreetmap.org/copyright'),
+              ),
+            ),
+          ],
+          alignment: AttributionAlignment.bottomLeft,
+        )
+      ],
     );
   }
 }

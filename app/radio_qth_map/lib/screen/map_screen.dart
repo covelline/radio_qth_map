@@ -14,7 +14,6 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  var _showBackButton = false;
   final _operationMapKey = GlobalKey<OperationMapState>();
 
   void _showSearchDialog() {
@@ -72,17 +71,6 @@ class MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: _showBackButton
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  setState(() {
-                    _showBackButton = false;
-                    _operationMapKey.currentState!.onBackButtonPressed();
-                  });
-                },
-              )
-            : null,
         title: const Text('QTH map'),
         actions: [
           IconButton(
@@ -126,9 +114,7 @@ class MapScreenState extends State<MapScreen> {
       body: OperationMap(
         key: _operationMapKey,
         onOperationSelected: () {
-          setState(() {
-            _showBackButton = true;
-          });
+          setState(() {});
         },
       ),
     );

@@ -4,7 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "app/radio_qth_map/build/web",
     "ignore": [
       "firebase.json",
       "**/.*",
