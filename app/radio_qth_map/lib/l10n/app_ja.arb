@@ -5,6 +5,7 @@
   "callsign_is_required": "コールサインは必須です",
   "cancel": "削除しない",
   "confim": "確認",
+  "contact_us": "お問い合わせ",
   "delete": "削除",
   "delete_operation_confirm_message": "このデータを削除して良いですか",
   "end": "終了",
@@ -24,5 +25,6 @@
   "publish_log_tooltip": "ログを公開するには、ログを追加してください",
   "search": "検索（現在未実装です）",
   "start": "開始",
+  "terms_of_use": "利用規約",
   "time_error": "開始または終了時間は必須です"
 }

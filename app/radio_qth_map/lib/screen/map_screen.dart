@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/add_operation_screen.dart';
+import 'package:radio_qth_map/screen/terms_screen.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:responsive_framework/max_width_box.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -76,6 +79,38 @@ class MapScreenState extends State<MapScreen> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: _showSearchDialog,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const MaxWidthBox(
+                    maxWidth: 1200,
+                    child: TermsScreen(),
+                  ),
+                ),
+              );
+            },
+            child: Text(AppLocalizations.of(context)!.terms_of_use),
+          ),
+          TextButton(
+            onPressed: () {
+              launchUrl(
+                Uri.parse(
+                    "https://docs.google.com/forms/d/e/1FAIpQLSed4yjxKosyZq_LSV7APdRxKPwTr9DgP8TJD4_JagpwyQk9VA/viewform"),
+              );
+            },
+            child: Text(AppLocalizations.of(context)!.contact_us),
+          ),
+          TextButton(
+            onPressed: () {
+              launchUrl(Uri.parse("https://twitter.com/numa_radio"));
+            },
+            child: SvgPicture.asset(
+              'image/x-twitter.svg',
+              width: 24,
+              height: 24,
+            ),
           ),
           DropdownButton<Locale>(
             value: Locale(AppLocalizations.of(context)!.localeName),
