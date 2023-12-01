@@ -4,17 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:radio_qth_map/firebase_options.dart';
+import 'package:radio_qth_map/firebase_options.dart' as debug;
+import 'package:radio_qth_map/firebase_options_prod.dart' as prod;
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/map_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   await dotenv.load(fileName: 'key.env');
+  if (dotenv.maybeGet('ENVIRONMENT') == 'prod') {
+    await Firebase.initializeApp(
+      options: prod.DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp(
+      options: debug.DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   final firestore = FirebaseFirestore.instance;
   if (dotenv.maybeGet('USE_FIRESTORE_EMULATOR') == 'true') {
     firestore.useFirestoreEmulator('localhost', 8080);
