@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/add_operation_screen.dart';
@@ -136,12 +137,7 @@ class MapScreenState extends State<MapScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const MaxWidthBox(
-              maxWidth: 1200,
-              child: AddOperationScreen(),
-            ),
-          ));
+          context.go('/qso/add');
         },
         label: Text(AppLocalizations.of(context)!.add_qso),
         icon: const Icon(Icons.add),

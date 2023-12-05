@@ -6,12 +6,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/firebase_options.dart' as debug;
 import 'package:radio_qth_map/firebase_options_prod.dart' as prod;
+import 'package:radio_qth_map/main_router.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
-import 'package:radio_qth_map/screen/map_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
+  usePathUrlStrategy();
   await dotenv.load(fileName: 'key.env');
   if (dotenv.maybeGet('ENVIRONMENT') == 'prod') {
     await Firebase.initializeApp(
@@ -47,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeNotifier = context.watch<LocaleNotifier>();
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'QTH map',
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -56,10 +58,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff24c5be)),
         useMaterial3: true,
       ),
-      home: const MaxWidthBox(
-        maxWidth: 1200,
-        child: MapScreen(),
-      ),
+      routerConfig: router,
       builder: (context, child) {
         return ResponsiveBreakpoints.builder(
           child: child!,
