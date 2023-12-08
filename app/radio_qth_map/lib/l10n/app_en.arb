@@ -1,5 +1,6 @@
 {
   "add_qso": "Add QSO",
+  "app_description": "A Radio Operation Log Mapping Tool to Visualize Your Wireless Experiences",
   "band": "Band",
   "callsign": "callsign",
   "callsign_is_required": "Callsign in required",
@@ -12,6 +13,12 @@
   "frequency": "Frequency",
   "frequency_error": "Either Frequency or Band is required",
   "gridlocator": "Grid Locator",
+  "introduce_for_experience": "\"QTH map\" functions as a platform for sharing information, enabling users to enhance their own radio operation experiences by viewing the operation logs of other radio enthusiasts.",
+  "introduce_for_experience_title": "Promoting the Enhancement of Radio Experiences:",
+  "introduce_for_logging": " In 'QTH map', you can record and share the details of each amateur radio operation as logs with other users.",
+  "introduce_for_logging_title": "Recording and Sharing Operation Logs:",
+  "introduce_for_mapping": "Visualize and track your radio experiences through mapped operation logs, enabling easy confirmation of the scope of operations and history of activities.",
+  "introduce_for_mapping_title": "Visualization with Mapping Function:",
   "latitude": "Latitude",
   "location_error": "Either Grid Locator or Latitude and Longitude is required",
   "longitude": "Longitude",
@@ -26,5 +33,6 @@
   "search": "Search(Not yet implemented)",
   "start": "Start",
   "terms_of_use": "Terms of use",
-  "time_error": "Either Start or End is required"
+  "time_error": "Either Start or End is required",
+  "try_map_now": "Try it now !"
 }

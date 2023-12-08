@@ -1,5 +1,6 @@
 {
   "add_qso": "ログを追加する",
+  "app_description": "無線体験を可視化する運用ログマッピングツール",
   "band": "バンド",
   "callsign": "コールサイン",
   "callsign_is_required": "コールサインは必須です",
@@ -12,6 +13,12 @@
   "frequency": "周波数",
   "frequency_error": "周波数またはバンドは必須です",
   "gridlocator": "グリッドローケータ",
+  "introduce_for_experience": "「QTH map」は情報を共有するプラットフォームとして機能し、ユーザーは他の無線家の運用ログによって自分の無線運用体験の改善を促進できます。",
+  "introduce_for_experience_title": "無線体験向上を促進:",
+  "introduce_for_logging": "「QTH map」では、アマチュア無線の各運用の詳細をログとして記録し、他のユーザーと共有できます。",
+  "introduce_for_logging_title": "運用ログの記録と共有:",
+  "introduce_for_mapping": "マッピングされた運用ログで自分の無線体験を視覚的に追跡し、運用の範囲や活動の履歴を簡単に確認できます。",
+  "introduce_for_mapping_title": "マッピング機能による可視化:",
   "latitude": "緯度",
   "location_error": "グリッドロケーターまたは緯度経度は必須です",
   "longitude": "経度",
@@ -26,5 +33,6 @@
   "search": "検索（現在未実装です）",
   "start": "開始",
   "terms_of_use": "利用規約",
-  "time_error": "開始または終了時間は必須です"
+  "time_error": "開始または終了時間は必須です",
+  "try_map_now": "今すぐ使ってみる"
 }
