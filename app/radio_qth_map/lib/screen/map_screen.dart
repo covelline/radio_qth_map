@@ -18,56 +18,18 @@ class MapScreen extends StatefulWidget {
 
 class MapScreenState extends State<MapScreen> {
   final _operationMapKey = GlobalKey<OperationMapState>();
+  final _searchController = TextEditingController();
+  String? _currentCallsign;
 
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Return the search dialog here
-        return AlertDialog(
-          title: const Text('Search'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Call Sign'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Start Time'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'End Time'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Band'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Mode'),
-                // Implement onChange or controller
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(AppLocalizations.of(context)!.search),
-              onPressed: () {
-                // Implement search logic
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _search() {
+    // 大文字小文字を無視するため、大文字に変換する
+    final callsign = _searchController.text.toUpperCase();
+    if (callsign != _currentCallsign) {
+      _operationMapKey.currentState?.showOperations(callsign: callsign);
+    }
+    setState(() {
+      _currentCallsign = callsign;
+    });
   }
 
   @override
@@ -76,9 +38,29 @@ class MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         title: const Text('QTH map'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
+          Flexible(
+            fit: FlexFit.loose,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 280),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SearchBar(
+                  controller: _searchController,
+                  hintText: AppLocalizations.of(context)!.callsign,
+                  trailing: [
+                    IconButton(
+                      onPressed: () {
+                        _search();
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                  ],
+                  onSubmitted: (_) {
+                    _search();
+                  },
+                ),
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {

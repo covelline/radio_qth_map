@@ -51,9 +51,13 @@ class OperationMapState extends State<OperationMap>
     super.didChangeDependencies();
     _dateFormat =
         DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).add_Hms();
+    showOperations();
+  }
 
+  void showOperations({String? callsign}) {
     final repository = context.read<FirestoreRepository>();
-    _operationSubscription = repository.operations.listen((operations) {
+    _operationSubscription =
+        repository.findOperation(callsign: callsign).listen((operations) {
       setState(() {
         _operationMarkers = operations.map((operation) {
           return Marker(

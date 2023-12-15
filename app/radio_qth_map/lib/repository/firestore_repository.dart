@@ -26,6 +26,30 @@ class FirestoreRepository {
     });
   }
 
+  Stream<List<Operation>> findOperation({String? callsign}) {
+    if (callsign == null || callsign.isEmpty) {
+      return operations;
+    }
+
+    // コールサインの前方一致で検索する
+    final start = callsign;
+    final end = callsign.substring(0, callsign.length - 1) +
+        String.fromCharCode(callsign.codeUnitAt(callsign.length - 1) + 1);
+
+    return firestore
+        .collection('operation')
+        .where('callsign', isGreaterThanOrEqualTo: start)
+        .where('callsign', isLessThan: end)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final operation = Operation.fromJson(doc.id, data);
+        return operation;
+      }).toList();
+    });
+  }
+
   Future<void> storeOperations(List<OperationRowData> operations) async {
     // 運用開始・終了時間のリストを作る
     final operationTimes = operations
