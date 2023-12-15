@@ -11,7 +11,9 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/map',
-      builder: (context, state) => const MapScreen(),
+      builder: (context, state) => MapScreen(
+        initialCallsign: state.uri.queryParameters['callsign'],
+      ),
     ),
     GoRoute(
       path: '/qso/add',

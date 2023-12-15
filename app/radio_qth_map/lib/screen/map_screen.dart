@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,12 +6,17 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/terms_screen.dart';
+import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:responsive_framework/max_width_box.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  const MapScreen({
+    super.key,
+    this.initialCallsign,
+  });
+  final String? initialCallsign;
 
   @override
   MapScreenState createState() => MapScreenState();
@@ -24,12 +30,26 @@ class MapScreenState extends State<MapScreen> {
   void _search() {
     // 大文字小文字を無視するため、大文字に変換する
     final callsign = _searchController.text.toUpperCase();
+
+    // アドレスバーのURLを変更する
+    if (kIsWeb) {
+      //URLエンコードする
+      final encodedCallsign = Uri.encodeComponent(callsign);
+      pushHistory('/map?callsign=$encodedCallsign');
+    }
+
     if (callsign != _currentCallsign) {
       _operationMapKey.currentState?.showOperations(callsign: callsign);
     }
     setState(() {
       _currentCallsign = callsign;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.text = widget.initialCallsign ?? '';
   }
 
   @override
@@ -125,6 +145,7 @@ class MapScreenState extends State<MapScreen> {
       ),
       body: OperationMap(
         key: _operationMapKey,
+        initialCallsign: widget.initialCallsign,
         onOperationSelected: () {
           setState(() {});
         },

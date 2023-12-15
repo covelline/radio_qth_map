@@ -19,10 +19,14 @@ class OperationMap extends StatefulWidget {
   const OperationMap({
     Key? key,
     required this.onOperationSelected,
+    this.initialCallsign,
   }) : super(key: key);
 
   /// オペレーションが選択された時のコールバック
   final VoidCallback onOperationSelected;
+
+  /// 初期状態で表示するコールサイン
+  final String? initialCallsign;
 
   @override
   OperationMapState createState() => OperationMapState();
@@ -51,7 +55,7 @@ class OperationMapState extends State<OperationMap>
     super.didChangeDependencies();
     _dateFormat =
         DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).add_Hms();
-    showOperations();
+    showOperations(callsign: widget.initialCallsign);
   }
 
   void showOperations({String? callsign}) {
