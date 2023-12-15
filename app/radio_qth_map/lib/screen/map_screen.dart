@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
-import 'package:radio_qth_map/screen/terms_screen.dart';
 import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:url_launcher/url_launcher.dart';
