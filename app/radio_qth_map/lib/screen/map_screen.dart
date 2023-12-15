@@ -1,71 +1,49 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
+import 'package:radio_qth_map/screen/terms_screen.dart';
+import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
-
+  const MapScreen({
+    super.key,
+    this.initialCallsign,
+    this.operationId,
+  });
+  final String? initialCallsign;
+  final String? operationId;
   @override
   MapScreenState createState() => MapScreenState();
 }
 
 class MapScreenState extends State<MapScreen> {
   final _operationMapKey = GlobalKey<OperationMapState>();
+  final _searchController = TextEditingController();
+  String? _currentCallsign;
 
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Return the search dialog here
-        return AlertDialog(
-          title: const Text('Search'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Call Sign'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Start Time'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'End Time'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Band'),
-                // Implement onChange or controller
-              ),
-              TextField(
-                enabled: false,
-                decoration: InputDecoration(hintText: 'Mode'),
-                // Implement onChange or controller
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(AppLocalizations.of(context)!.search),
-              onPressed: () {
-                // Implement search logic
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _search() {
+    // 大文字小文字を無視するため、大文字に変換する
+    final callsign = _searchController.text.toUpperCase();
+
+    if (callsign != _currentCallsign) {
+      _operationMapKey.currentState?.showOperations(callsign: callsign);
+    }
+    setState(() {
+      _currentCallsign = callsign;
+    });
+    _setHistoryToCurrentState();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.text = widget.initialCallsign ?? '';
   }
 
   @override
@@ -74,9 +52,29 @@ class MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         title: const Text('QTH map'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
+          Flexible(
+            fit: FlexFit.loose,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 280),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SearchBar(
+                  controller: _searchController,
+                  hintText: AppLocalizations.of(context)!.callsign,
+                  trailing: [
+                    IconButton(
+                      onPressed: () {
+                        _search();
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                  ],
+                  onSubmitted: (_) {
+                    _search();
+                  },
+                ),
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -140,10 +138,30 @@ class MapScreenState extends State<MapScreen> {
       ),
       body: OperationMap(
         key: _operationMapKey,
-        onOperationSelected: () {
-          setState(() {});
+        initialCallsign: widget.initialCallsign,
+        initialOperationId: widget.operationId,
+        onOperationSelected: (operationId) {
+          setState(() {
+            if (operationId != null) {
+              if (kIsWeb) {
+                pushHistory('/map/$operationId');
+              }
+            } else {
+              _setHistoryToCurrentState();
+            }
+          });
         },
       ),
     );
+  }
+
+  void _setHistoryToCurrentState() {
+    if (kIsWeb) {
+      if (_currentCallsign != null && _currentCallsign!.isNotEmpty) {
+        pushHistory('/map?callsign=$_currentCallsign');
+      } else {
+        pushHistory('/map');
+      }
+    }
   }
 }

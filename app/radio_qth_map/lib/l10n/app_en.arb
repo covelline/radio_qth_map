@@ -29,6 +29,7 @@
   "my_statio_settings": "My station settings",
   "operation_date": "Operation date",
   "operation_location": "Operation Location",
+  "operation_not_found": "Operation not found",
   "other_station_settings": "Other station settings",
   "power": "Power",
   "publish_log": "Publish log",

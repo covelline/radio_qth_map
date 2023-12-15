@@ -29,6 +29,7 @@
   "my_statio_settings": "自局の設定",
   "operation_date": "運用日時",
   "operation_location": "運用場所",
+  "operation_not_found": "運用ログが見つかりません",
   "other_station_settings": "相手局の設定",
   "power": "出力",
   "publish_log": "ログを公開する",

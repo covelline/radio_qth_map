@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
@@ -184,6 +185,9 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                 child: TextFormField(
                   enabled: widget.canChangeCallsign,
                   controller: callsignController,
+                  inputFormatters: [
+                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                  ],
                   decoration: InputDecoration(
                     labelText: '${AppLocalizations.of(context)!.callsign}*',
                   ),
@@ -199,6 +203,9 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                 rowFlex: 1,
                 child: TextFormField(
                   controller: gridlocatorController,
+                  inputFormatters: [
+                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                  ],
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.gridlocator,
                   ),
@@ -379,6 +386,9 @@ class _OtherStationInfoInputFormState
                 rowFlex: 1,
                 child: TextFormField(
                   controller: callsignController,
+                  inputFormatters: [
+                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                  ],
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.callsign,
                   ),
@@ -388,6 +398,9 @@ class _OtherStationInfoInputFormState
                 rowFlex: 1,
                 child: TextFormField(
                   controller: gridlocatorController,
+                  inputFormatters: [
+                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                  ],
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.gridlocator,
                   ),
@@ -511,3 +524,10 @@ class _OtherStationInfoInputFormState
     srstController.clear();
   }
 }
+
+TextInputFormatFunction _uppercaseFormatter = (oldValue, newValue) {
+  return TextEditingValue(
+    text: newValue.text.toUpperCase(),
+    selection: newValue.selection,
+  );
+};
