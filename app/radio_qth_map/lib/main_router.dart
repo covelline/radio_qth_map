@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:radio_qth_map/screen/add_operation_screen.dart';
 import 'package:radio_qth_map/screen/introduce_screen.dart';
 import 'package:radio_qth_map/screen/map_screen.dart';
+import 'package:radio_qth_map/screen/terms_screen.dart';
 
 final router = GoRouter(
   routes: [
@@ -25,5 +26,9 @@ final router = GoRouter(
       path: '/qso/add',
       builder: (context, state) => const AddOperationScreen(),
     ),
+    GoRoute(
+      path: '/terms',
+      builder: (context, state) => const TermsScreen(),
+    )
   ],
 );

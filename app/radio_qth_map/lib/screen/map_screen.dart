@@ -8,7 +8,6 @@ import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/screen/terms_screen.dart';
 import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
-import 'package:responsive_framework/max_width_box.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
@@ -79,14 +78,13 @@ class MapScreenState extends State<MapScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const MaxWidthBox(
-                    maxWidth: 1200,
-                    child: TermsScreen(),
-                  ),
-                ),
-              );
+              showLicensePage(context: context);
+            },
+            child: Text(AppLocalizations.of(context)!.license),
+          ),
+          TextButton(
+            onPressed: () {
+              context.go('/terms');
             },
             child: Text(AppLocalizations.of(context)!.terms_of_use),
           ),

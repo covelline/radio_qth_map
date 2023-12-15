@@ -80,7 +80,15 @@ class IntroduceScreen extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showLicensePage(context: context);
+                },
+                child: Text(AppLocalizations.of(context)!.license),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.go('/terms');
+                },
                 child: Text(AppLocalizations.of(context)!.terms_of_use),
               ),
               TextButton(
@@ -147,22 +155,42 @@ class IntroduceScreen extends StatelessWidget {
                             color: Theme.of(context).colorScheme.outline,
                           ),
                         ),
-                        child: ListTile(
-                          titleAlignment: ListTileTitleAlignment.titleHeight,
-                          leading: const Icon(
-                            Icons.menu_book,
-                            weight: 1.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.menu_book,
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .introduce_for_logging_title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .introduce_for_logging,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ],
                           ),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .introduce_for_logging_title,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context)!.introduce_for_logging,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          isThreeLine: true,
                         ),
                       ),
                     ),
@@ -176,22 +204,42 @@ class IntroduceScreen extends StatelessWidget {
                             color: Theme.of(context).colorScheme.outline,
                           ),
                         ),
-                        child: ListTile(
-                          titleAlignment: ListTileTitleAlignment.titleHeight,
-                          leading: const Icon(
-                            Icons.map,
-                            weight: 1.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.map,
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .introduce_for_mapping_title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .introduce_for_mapping,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ],
                           ),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .introduce_for_mapping_title,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context)!.introduce_for_mapping,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          isThreeLine: true,
                         ),
                       ),
                     ),
@@ -205,27 +253,157 @@ class IntroduceScreen extends StatelessWidget {
                             color: Theme.of(context).colorScheme.outline,
                           ),
                         ),
-                        child: ListTile(
-                          titleAlignment: ListTileTitleAlignment.titleHeight,
-                          leading: const Icon(
-                            Icons.switch_access_shortcut,
-                            weight: 1.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.switch_access_shortcut,
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .introduce_for_experience_title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .introduce_for_experience,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ],
                           ),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .introduce_for_experience_title,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .introduce_for_experience,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          isThreeLine: true,
                         ),
                       ),
                     )
                   ],
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  onPressed: () {
+                    context.go('/map');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.try_map_now,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 12),
+          ),
+          SliverToBoxAdapter(
+            child: MaxWidthBox(
+              maxWidth: 1200,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: ResponsiveRowColumn(
+                    rowMainAxisAlignment: MainAxisAlignment.center,
+                    rowMainAxisSize: MainAxisSize.max,
+                    rowCrossAxisAlignment: CrossAxisAlignment.start,
+                    rowSpacing: 24,
+                    columnSpacing: 24,
+                    layout:
+                        ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                            ? ResponsiveRowColumnType.COLUMN
+                            : ResponsiveRowColumnType.ROW,
+                    children: [
+                      ResponsiveRowColumnItem(
+                        rowFlex: 1,
+                        child: Text(
+                          AppLocalizations.of(context)!.introduce_for_community,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      ResponsiveRowColumnItem(
+                        rowFlex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.about_me,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            Row(
+                              children: [
+                                const Text('JK1TUT'),
+                                TextButton(
+                                  onPressed: () {
+                                    launchUrl(Uri.parse(
+                                        "https://twitter.com/numa_radio"));
+                                  },
+                                  child: const Text('X(Twitter)'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    launchUrl(
+                                      Uri.parse(
+                                          "https://www.qrz.com/db/JK1TUT"),
+                                    );
+                                  },
+                                  child: const Text('QRZ.com'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    launchUrl(
+                                      Uri.parse(
+                                          'https://github.com/covelline/radio_qth_map'),
+                                    );
+                                  },
+                                  child: const Text('Github.com'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
