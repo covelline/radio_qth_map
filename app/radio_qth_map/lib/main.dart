@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:radio_qth_map/firebase_options.dart' as debug;
-import 'package:radio_qth_map/firebase_options_prod.dart' as prod;
 import 'package:radio_qth_map/main_router.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
@@ -15,15 +16,20 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 void main() async {
   usePathUrlStrategy();
   await dotenv.load(fileName: 'key.env');
-  if (dotenv.maybeGet('ENVIRONMENT') == 'prod') {
-    await Firebase.initializeApp(
-      options: prod.DefaultFirebaseOptions.currentPlatform,
-    );
-  } else {
-    await Firebase.initializeApp(
-      options: debug.DefaultFirebaseOptions.currentPlatform,
-    );
-  }
+  final firebaseOptions = await rootBundle.loadString("firebase.json");
+  const jsonDecoder = JsonDecoder();
+  final options = jsonDecoder.convert(firebaseOptions);
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: options['apiKey'],
+      authDomain: options['authDomain'],
+      projectId: options['projectId'],
+      storageBucket: options['storageBucket'],
+      messagingSenderId: options['messagingSenderId'],
+      appId: options['appId'],
+      measurementId: options['measurementId'],
+    ),
+  );
   final firestore = FirebaseFirestore.instance;
   if (dotenv.maybeGet('USE_FIRESTORE_EMULATOR') == 'true') {
     firestore.useFirestoreEmulator('localhost', 8080);
