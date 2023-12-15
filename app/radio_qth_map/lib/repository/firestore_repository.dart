@@ -26,7 +26,7 @@ class FirestoreRepository {
     });
   }
 
-  Stream<List<Operation>> findOperation({String? callsign}) {
+  Stream<List<Operation>> findOperations({String? callsign}) {
     if (callsign == null || callsign.isEmpty) {
       return operations;
     }
@@ -48,6 +48,19 @@ class FirestoreRepository {
         return operation;
       }).toList();
     });
+  }
+
+  Future<Operation?> findOperation(String operationId) async {
+    final doc = await firestore.collection('operation').doc(operationId).get();
+    if (!doc.exists) {
+      return null;
+    }
+    final data = doc.data();
+    if (data == null) {
+      return null;
+    }
+    final operation = Operation.fromJson(doc.id, data);
+    return operation;
   }
 
   Future<void> storeOperations(List<OperationRowData> operations) async {

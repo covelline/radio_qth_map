@@ -16,6 +16,12 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
+      path: '/map/:id',
+      builder: (context, state) => MapScreen(
+        operationId: state.pathParameters['id'],
+      ),
+    ),
+    GoRoute(
       path: '/qso/add',
       builder: (context, state) => const AddOperationScreen(),
     ),

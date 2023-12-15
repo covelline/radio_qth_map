@@ -15,9 +15,10 @@ class MapScreen extends StatefulWidget {
   const MapScreen({
     super.key,
     this.initialCallsign,
+    this.operationId,
   });
   final String? initialCallsign;
-
+  final String? operationId;
   @override
   MapScreenState createState() => MapScreenState();
 }
@@ -31,19 +32,13 @@ class MapScreenState extends State<MapScreen> {
     // 大文字小文字を無視するため、大文字に変換する
     final callsign = _searchController.text.toUpperCase();
 
-    // アドレスバーのURLを変更する
-    if (kIsWeb) {
-      //URLエンコードする
-      final encodedCallsign = Uri.encodeComponent(callsign);
-      pushHistory('/map?callsign=$encodedCallsign');
-    }
-
     if (callsign != _currentCallsign) {
       _operationMapKey.currentState?.showOperations(callsign: callsign);
     }
     setState(() {
       _currentCallsign = callsign;
     });
+    _setHistoryToCurrentState();
   }
 
   @override
@@ -146,10 +141,29 @@ class MapScreenState extends State<MapScreen> {
       body: OperationMap(
         key: _operationMapKey,
         initialCallsign: widget.initialCallsign,
-        onOperationSelected: () {
-          setState(() {});
+        initialOperationId: widget.operationId,
+        onOperationSelected: (operationId) {
+          setState(() {
+            if (operationId != null) {
+              if (kIsWeb) {
+                pushHistory('/map/$operationId');
+              }
+            } else {
+              _setHistoryToCurrentState();
+            }
+          });
         },
       ),
     );
+  }
+
+  void _setHistoryToCurrentState() {
+    if (kIsWeb) {
+      if (_currentCallsign != null && _currentCallsign!.isNotEmpty) {
+        pushHistory('/map?callsign=$_currentCallsign');
+      } else {
+        pushHistory('/map');
+      }
+    }
   }
 }

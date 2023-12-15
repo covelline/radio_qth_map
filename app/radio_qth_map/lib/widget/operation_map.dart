@@ -19,13 +19,19 @@ class OperationMap extends StatefulWidget {
     Key? key,
     required this.onOperationSelected,
     this.initialCallsign,
+    this.initialOperationId,
   }) : super(key: key);
 
   /// オペレーションが選択された時のコールバック
-  final VoidCallback onOperationSelected;
+  /// オペレーションIDが通知される
+  /// 洗濯が解除された時は、nullが通知される
+  final ValueChanged<String?> onOperationSelected;
 
   /// 初期状態で表示するコールサイン
   final String? initialCallsign;
+
+  /// 初期状態で表示するオペレーション
+  final String? initialOperationId;
 
   @override
   OperationMapState createState() => OperationMapState();
@@ -54,13 +60,19 @@ class OperationMapState extends State<OperationMap>
     super.didChangeDependencies();
     _dateFormat =
         DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).add_Hms();
-    showOperations(callsign: widget.initialCallsign);
+    if (widget.initialOperationId != null) {
+      showOperation(widget.initialOperationId!);
+    } else if (widget.initialCallsign != null) {
+      showOperations(callsign: widget.initialCallsign);
+    } else {
+      showOperations();
+    }
   }
 
   void showOperations({String? callsign}) {
     final repository = context.read<FirestoreRepository>();
     _operationSubscription =
-        repository.findOperation(callsign: callsign).listen((operations) {
+        repository.findOperations(callsign: callsign).listen((operations) {
       setState(() {
         _operationMarkers = operations.map((operation) {
           return Marker(
@@ -87,6 +99,33 @@ class OperationMapState extends State<OperationMap>
         }).toList();
         _visibleMarkers = _operationMarkers;
       });
+    });
+  }
+
+  Future<void> showOperation(String operationId) async {
+    final repository = context.read<FirestoreRepository>();
+    final operation = await repository.findOperation(operationId);
+    if (operation == null) {
+      // Snackbarでエラーを表示する
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.operation_not_found),
+            showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+      return;
+    }
+    setState(() {
+      _selectedOperation = operation;
+      _showOperationDetail();
+      _subscribeQSOs();
+      _animatedMapMove(
+        operation.location.latLng,
+        10,
+      );
     });
   }
 
@@ -181,7 +220,7 @@ class OperationMapState extends State<OperationMap>
               height: 60,
             ),
           );
-        widget.onOperationSelected();
+        widget.onOperationSelected(operation.id);
       });
     });
   }
@@ -228,7 +267,13 @@ class OperationMapState extends State<OperationMap>
       _selectedOperation = null;
       _selectedQsoWithOperation = null;
       _distanceLines = [];
+      widget.onOperationSelected(null);
     });
+    // コールサイン直指定などでオペレーションを読み込んでいない場合は、
+    // オペレーション一覧を表示する
+    if (_operationMarkers.isEmpty) {
+      showOperations();
+    }
   }
 
   void _showDistanceLine() {
