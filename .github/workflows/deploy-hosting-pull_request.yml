@@ -16,7 +16,7 @@ jobs:
         env:
           FIREBASE_APP_CONFIGURE_DEV: ${{ secrets.FIREBASE_APP_CONFIGURE_DEV }}
         run: |
-          echo "$FIREBASE_APP_CONFIGURE_DEV" > firebase.json
+          echo "$FIREBASE_APP_CONFIGURE_DEV" > lib/firebase_options/dev.dart
           touch key.env
       - uses: kuhnroyal/flutter-fvm-config-action@v1
         id: fvm-config-action

@@ -45,5 +45,4 @@ flutter:
   assets:
     - image/
     - key.env
-    - firebase.json
     
