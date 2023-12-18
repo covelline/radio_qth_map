@@ -22,7 +22,7 @@ jobs:
         id: fvm-config-action
         with:
           path: app/radio_qth_map/.fvm/fvm_config.json
-      - uses: subosito/flutter-action@v2.10.0
+      - uses: subosito/flutter-action@v2.12.0
         with:
           flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
           cache: true
