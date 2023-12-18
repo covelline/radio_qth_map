@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IntroduceScreen extends StatelessWidget {
-  const IntroduceScreen({Key? key}) : super(key: key);
+  const IntroduceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
