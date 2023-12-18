@@ -130,7 +130,7 @@ class MapScreenState extends State<MapScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          context.go('/qso/add');
+          context.push('/qso/add');
         },
         label: Text(AppLocalizations.of(context)!.add_qso),
         icon: const Icon(Icons.add),
