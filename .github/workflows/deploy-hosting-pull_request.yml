@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "$FIREBASE_APP_CONFIGURE_DEV" > lib/firebase_options/dev.dart
           touch key.env
-      - uses: kuhnroyal/flutter-fvm-config-action@v1
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action
         with:
           path: app/radio_qth_map/.fvm/fvm_config.json
