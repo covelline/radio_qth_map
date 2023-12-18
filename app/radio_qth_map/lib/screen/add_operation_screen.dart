@@ -11,7 +11,7 @@ import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:radio_qth_map/widget/date_time_ext.dart';
 
 class AddOperationScreen extends StatefulWidget {
-  const AddOperationScreen({Key? key}) : super(key: key);
+  const AddOperationScreen({super.key});
 
   @override
   State<AddOperationScreen> createState() => _AddOperationScreenState();
@@ -145,9 +145,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
 
 class _MyOperationInfoInputForm extends StatefulWidget {
   const _MyOperationInfoInputForm({
-    Key? key,
+    super.key,
     required this.canChangeCallsign,
-  }) : super(key: key);
+  });
   final bool canChangeCallsign;
 
   @override
@@ -349,7 +349,7 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
 }
 
 class _OtherStationInfoInputForm extends StatefulWidget {
-  const _OtherStationInfoInputForm({Key? key}) : super(key: key);
+  const _OtherStationInfoInputForm({super.key});
 
   @override
   State<StatefulWidget> createState() {

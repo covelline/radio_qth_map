@@ -16,11 +16,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class OperationMap extends StatefulWidget {
   const OperationMap({
-    Key? key,
+    super.key,
     required this.onOperationSelected,
     this.initialCallsign,
     this.initialOperationId,
-  }) : super(key: key);
+  });
 
   /// オペレーションが選択された時のコールバック
   /// オペレーションIDが通知される

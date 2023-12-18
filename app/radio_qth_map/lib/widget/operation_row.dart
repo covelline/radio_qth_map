@@ -39,10 +39,10 @@ class OperationRowData with _$OperationRowData {
 
 class OperationRow extends StatelessWidget {
   const OperationRow({
-    Key? key,
+    super.key,
     required this.data,
     this.onTapDelete,
-  }) : super(key: key);
+  });
 
   final OperationRowData data;
   final VoidCallback? onTapDelete;
