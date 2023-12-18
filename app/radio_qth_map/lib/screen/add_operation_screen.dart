@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
@@ -35,7 +36,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                 final repository = context.read<FirestoreRepository>();
                 await repository.storeOperations(_logList);
                 if (context.mounted) {
-                  Navigator.of(context).pop();
+                  context.pop();
                 }
               },
         label: Text(AppLocalizations.of(context)!.publish_log),
