@@ -27,6 +27,7 @@ jobs:
           flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
           cache: true
       - run: flutter pub get
+      - run: flutter gen-l10n
       - run: flutter build web
       - run: flutter analyze
       - uses: FirebaseExtended/action-hosting-deploy@v0
