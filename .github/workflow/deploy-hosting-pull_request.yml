@@ -1,0 +1,37 @@
+name: Deploy to Firebase Hosting on PR
+on:
+  pull_request:
+    paths:
+      - "app/radio_qth_map/**"
+jobs:
+  build_and_preview:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/radio_qth_map
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        env:
+          FIREBASE_APP_CONFIGURE_DEV: ${{ secrets.FIREBASE_APP_CONFIGURE_DEV }}
+        run: |
+          echo "$FIREBASE_APP_CONFIGURE_DEV" > firebase.json
+          touch key.env
+      - uses: kuhnroyal/flutter-fvm-config-action@v1
+        id: fvm-config-action
+        with:
+          path: app/radio_qth_map/.fvm/fvm_config.json
+      - uses: subosito/flutter-action@v2.10.0
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web
+      - run: flutter analyze
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RADIO_QTH_MAP_DEV }}"
+          projectId: radio-qth-map-dev
+          expires: 7d
