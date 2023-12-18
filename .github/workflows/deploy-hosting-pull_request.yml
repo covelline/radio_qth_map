@@ -30,9 +30,3 @@ jobs:
       - run: flutter gen-l10n
       - run: flutter build web
       - run: flutter analyze
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RADIO_QTH_MAP_DEV }}"
-          projectId: radio-qth-map-dev
-          expires: 7d
