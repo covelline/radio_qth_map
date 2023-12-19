@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:radio_qth_map/data/free_license_radio_mode.dart';
 
 part 'operation_row.freezed.dart';
 
@@ -11,7 +12,8 @@ class OperationRowData with _$OperationRowData {
   @Assert(
       'myGridlocator != null || (myLatitude != null && myLongitude != null)',
       'Gridlocator or lat/lng is required')
-  @Assert('frequency != null || band != null', 'Frequency or band is required')
+  @Assert('freeLicenseMode != null || frequency != null || band != null',
+      'Frequency or band is required')
   @Assert(
       'otherGridlocator != null || (otherLatitude != null && otherLongitude != null)',
       'Gridlocator or lat/lng is required')
@@ -24,7 +26,9 @@ class OperationRowData with _$OperationRowData {
     double? myLongitude,
     double? frequency,
     AmateurRadioBand? band,
-    AmateurRadioMode? mode,
+    AmateurRadioMode? amateurRadioMode,
+    FreeLicenseRadioMode? freeLicenseMode,
+    int? channel,
     double? power,
     String? otherCallsign,
     String? otherGridlocator,
@@ -55,9 +59,9 @@ class OperationRow extends StatelessWidget {
       title: Text(data.otherGridlocator ??
           '${data.otherLatitude.toString()}, ${data.otherLongitude.toString()}'),
       subtitle: Text(data.otherCallsign ?? ''),
-      trailing: Text(
-        data.frequency?.toString() ?? data.band.toString(),
-      ),
+      trailing: Text(data.freeLicenseMode?.localizedDescription(context) ??
+          data.frequency?.toString() ??
+          data.band.toString()),
       onTap: () {
         showDialog(
           context: context,

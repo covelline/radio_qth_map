@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 enum FreeLicenseRadioMode {
   /// 特小
   personalUse,
@@ -10,4 +13,19 @@ enum FreeLicenseRadioMode {
 
   /// 市民ラジオ
   citizensBand,
+}
+
+extension FreeLicenseRadioModeExtension on FreeLicenseRadioMode {
+  String localizedDescription(BuildContext context) {
+    switch (this) {
+      case FreeLicenseRadioMode.personalUse:
+        return AppLocalizations.of(context)!.personal_use;
+      case FreeLicenseRadioMode.lcr:
+        return AppLocalizations.of(context)!.lcr;
+      case FreeLicenseRadioMode.dcr:
+        return AppLocalizations.of(context)!.dcr;
+      case FreeLicenseRadioMode.citizensBand:
+        return AppLocalizations.of(context)!.citizens_band;
+    }
+  }
 }

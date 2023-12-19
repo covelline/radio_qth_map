@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
@@ -32,6 +33,9 @@ sealed class OperationInfo with _$OperationInfo {
 
     /// モード
     required FreeLicenseRadioMode mode,
+
+    /// チャンネル
+    int? channel,
   }) = FreeLicenseRadioOperationInfo;
 
   factory OperationInfo.fromJson(
@@ -45,7 +49,7 @@ sealed class OperationInfo with _$OperationInfo {
 
 extension OperationInfoExtension on OperationInfo {
   /// 説明用テキスト
-  String get description {
+  String localizedDescription(BuildContext context) {
     switch (this) {
       case AmateurRadioOperationInfo(
           id: _,
@@ -58,7 +62,7 @@ extension OperationInfoExtension on OperationInfo {
           id: _,
           mode: final mode,
         ):
-        return 'Mode: ${mode.toString()}';
+        return 'Mode: ${mode.localizedDescription(context)}';
     }
   }
 }

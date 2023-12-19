@@ -95,23 +95,33 @@ class FirestoreRepository {
     final qsoMap = operations.fold<Map<OperationInfo, List<Qso>>>(
       {},
       (previousValue, element) {
-        // element.bandとelement.frequencyが両方あるならAmateurRadioBandInfo.bandAndFrequencyを使い、片方がnullならbandまたはfrequencyを使う
-        final AmateurRadioBandInfo band;
-        if (element.band != null && element.frequency != null) {
-          band = AmateurRadioBandInfo.bandAndFrequency(
-              band: element.band!, frequency: element.frequency!);
-        } else if (element.band != null) {
-          band = AmateurRadioBandInfo.band(band: element.band!);
-        } else if (element.frequency != null) {
-          band = AmateurRadioBandInfo.frequency(frequency: element.frequency!);
+        final OperationInfo operationInfo;
+        // フリラのモードがあるなら、フリラとする
+        if (element.freeLicenseMode != null) {
+          operationInfo = OperationInfo.freeLicense(
+            mode: element.freeLicenseMode!,
+            channel: element.channel,
+          );
         } else {
-          throw ArgumentError('Frequency or band is required');
+          // element.bandとelement.frequencyが両方あるならAmateurRadioBandInfo.bandAndFrequencyを使い、片方がnullならbandまたはfrequencyを使う
+          final AmateurRadioBandInfo band;
+          if (element.band != null && element.frequency != null) {
+            band = AmateurRadioBandInfo.bandAndFrequency(
+                band: element.band!, frequency: element.frequency!);
+          } else if (element.band != null) {
+            band = AmateurRadioBandInfo.band(band: element.band!);
+          } else if (element.frequency != null) {
+            band =
+                AmateurRadioBandInfo.frequency(frequency: element.frequency!);
+          } else {
+            throw ArgumentError('Frequency or band is required');
+          }
+          operationInfo = OperationInfo.amateur(
+            mode: element.amateurRadioMode,
+            band: band,
+            powerOutput: element.power,
+          );
         }
-        final operationInfo = OperationInfo.amateur(
-          mode: element.mode,
-          band: band,
-          powerOutput: element.power,
-        );
         final qso = Qso(
           callSign: element.otherCallsign,
           location:

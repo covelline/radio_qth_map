@@ -161,7 +161,7 @@ class _$AmateurRadioBandInfoBandImpl implements _AmateurRadioBandInfoBand {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AmateurRadioBandInfoBandImpl &&
@@ -331,7 +331,7 @@ class _$AmateureRadioBandInfoFrequencyImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AmateureRadioBandInfoFrequencyImpl &&
@@ -511,7 +511,7 @@ class _$AmateureRadioBandInfoBandAndFrequencyImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AmateureRadioBandInfoBandAndFrequencyImpl &&
