@@ -68,111 +68,126 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text(AppLocalizations.of(context)!.my_statio_settings),
-            ValueListenableBuilder(
-                valueListenable: _licenseModeNotifier,
-                builder: (context, type, _) {
-                  return _MyOperationInfoInputForm(
-                    key: _myOperationInfoKey,
-                    // 1運用につき1ライセンスタイプとするので、運用情報がある場合はコールサインを変更できないようにする
-                    canChangeCallsign: _logList.isEmpty,
-                    licenseType: type,
-                  );
-                }),
-            const SizedBox(
-              height: 8,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Text(AppLocalizations.of(context)!.my_statio_settings),
             ),
-            Text(AppLocalizations.of(context)!.other_station_settings),
-            ValueListenableBuilder(
+            SliverToBoxAdapter(
+              child: ValueListenableBuilder(
+                  valueListenable: _licenseModeNotifier,
+                  builder: (context, type, _) {
+                    return _MyOperationInfoInputForm(
+                      key: _myOperationInfoKey,
+                      // 1運用につき1ライセンスタイプとするので、運用情報がある場合はコールサインを変更できないようにする
+                      canChangeCallsign: _logList.isEmpty,
+                      licenseType: type,
+                    );
+                  }),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 8,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Text(AppLocalizations.of(context)!.other_station_settings),
+            ),
+            SliverToBoxAdapter(
+              child: ValueListenableBuilder(
                 valueListenable: _licenseModeNotifier,
                 builder: (context, type, _) {
                   return _OtherStationInfoInputForm(
                     key: _otherStationInfoKey,
                     licenseType: type,
                   );
-                }),
-            const SizedBox(
-              height: 8,
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                if (_myOperationInfoKey.currentState?.validate() == true &&
-                    _otherStationInfoKey.currentState?.validate() == true) {
-                  final myOperationInfo = _myOperationInfoKey.currentState!;
-                  final otherStationInfo = _otherStationInfoKey.currentState!;
-                  final operationRowData = OperationRowData(
-                    myCallsign: myOperationInfo.callsignController.text,
-                    myGridlocator: myOperationInfo.gridlocatorController.text,
-                    myLatitude: double.tryParse(
-                      myOperationInfo.latitudeController.text,
-                    ),
-                    myLongitude: double.tryParse(
-                      myOperationInfo.longitudeController.text,
-                    ),
-                    frequency: double.tryParse(
-                      myOperationInfo.frequencyController.text,
-                    ),
-                    band: myOperationInfo.band,
-                    amateurRadioMode: myOperationInfo.amateurRadioMode,
-                    freeLicenseMode: myOperationInfo.freeLicenseMode,
-                    channel: int.tryParse(
-                      myOperationInfo.channelController.text,
-                    ),
-                    power: double.tryParse(
-                      myOperationInfo.powerController.text,
-                    ),
-                    otherCallsign: otherStationInfo.callsignController.text,
-                    otherGridlocator:
-                        otherStationInfo.gridlocatorController.text,
-                    otherLatitude: double.tryParse(
-                      otherStationInfo.latitudeController.text,
-                    ),
-                    otherLongitude: double.tryParse(
-                      otherStationInfo.longitudeController.text,
-                    ),
-                    startTime: DateTimeExtension.tryParseUTC(
-                      otherStationInfo.startController.text,
-                    ),
-                    endTime: DateTimeExtension.tryParseUTC(
-                      otherStationInfo.endController.text,
-                    ),
-                    srst: int.tryParse(
-                      otherStationInfo.srstController.text,
-                    ),
-                    rrst: int.tryParse(
-                      otherStationInfo.rrstController.text,
-                    ),
-                  );
-                  setState(() {
-                    _logList.add(operationRowData);
-                  });
-                  otherStationInfo.reset();
-                }
-              },
-              icon: const Icon(Icons.add),
-              label: Text(
-                AppLocalizations.of(context)!.add_qso,
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _logList.length,
-                itemBuilder: (context, index) {
-                  return OperationRow(
-                    data: _logList[index],
-                    onTapDelete: () {
-                      setState(() {
-                        _logList.removeAt(index);
-                      });
-                    },
-                  );
                 },
               ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 8,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  if (_myOperationInfoKey.currentState?.validate() == true &&
+                      _otherStationInfoKey.currentState?.validate() == true) {
+                    final myOperationInfo = _myOperationInfoKey.currentState!;
+                    final otherStationInfo = _otherStationInfoKey.currentState!;
+                    final operationRowData = OperationRowData(
+                      myCallsign: myOperationInfo.callsignController.text,
+                      myGridlocator: myOperationInfo.gridlocatorController.text,
+                      myLatitude: double.tryParse(
+                        myOperationInfo.latitudeController.text,
+                      ),
+                      myLongitude: double.tryParse(
+                        myOperationInfo.longitudeController.text,
+                      ),
+                      frequency: double.tryParse(
+                        myOperationInfo.frequencyController.text,
+                      ),
+                      band: myOperationInfo.band,
+                      amateurRadioMode: myOperationInfo.amateurRadioMode,
+                      freeLicenseMode: myOperationInfo.freeLicenseMode,
+                      channel: int.tryParse(
+                        myOperationInfo.channelController.text,
+                      ),
+                      power: double.tryParse(
+                        myOperationInfo.powerController.text,
+                      ),
+                      otherCallsign: otherStationInfo.callsignController.text,
+                      otherGridlocator:
+                          otherStationInfo.gridlocatorController.text,
+                      otherLatitude: double.tryParse(
+                        otherStationInfo.latitudeController.text,
+                      ),
+                      otherLongitude: double.tryParse(
+                        otherStationInfo.longitudeController.text,
+                      ),
+                      startTime: DateTimeExtension.tryParseUTC(
+                        otherStationInfo.startController.text,
+                      ),
+                      endTime: DateTimeExtension.tryParseUTC(
+                        otherStationInfo.endController.text,
+                      ),
+                      srst: int.tryParse(
+                        otherStationInfo.srstController.text,
+                      ),
+                      rrst: int.tryParse(
+                        otherStationInfo.rrstController.text,
+                      ),
+                    );
+                    setState(() {
+                      _logList.add(operationRowData);
+                    });
+                    otherStationInfo.reset();
+                  }
+                },
+                icon: const Icon(Icons.add),
+                label: Text(
+                  AppLocalizations.of(context)!.add_qso,
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 8,
+              ),
+            ),
+            SliverList.builder(
+              itemCount: _logList.length,
+              itemBuilder: (context, index) {
+                return OperationRow(
+                  data: _logList[index],
+                  onTapDelete: () {
+                    setState(() {
+                      _logList.removeAt(index);
+                    });
+                  },
+                );
+              },
             )
           ],
         ),
