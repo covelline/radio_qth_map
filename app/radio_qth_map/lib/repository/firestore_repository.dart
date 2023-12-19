@@ -63,7 +63,9 @@ class FirestoreRepository {
     return operation;
   }
 
-  Future<void> storeOperations(List<OperationRowData> operations) async {
+  /// 運用情報を保存する
+  /// operationIdを返す
+  Future<String> storeOperations(List<OperationRowData> operations) async {
     // 運用開始・終了時間のリストを作る
     final operationTimes = operations
         .map((e) => [e.startTime, e.endTime])
@@ -166,6 +168,7 @@ class FirestoreRepository {
       }
     }
     await batch.commit();
+    return newOperationDoc.id;
   }
 
   Stream<List<QsoWithOperation>> qsoWithOperation({

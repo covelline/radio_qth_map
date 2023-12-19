@@ -57,9 +57,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             ? null
             : () async {
                 final repository = context.read<FirestoreRepository>();
-                await repository.storeOperations(_logList);
+                final id = await repository.storeOperations(_logList);
                 if (context.mounted) {
-                  context.pop();
+                  context.pop(id);
                 }
               },
         label: Text(AppLocalizations.of(context)!.publish_log),
