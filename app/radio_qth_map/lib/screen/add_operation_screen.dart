@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
+import 'package:radio_qth_map/data/free_license_radio_mode.dart';
+import 'package:radio_qth_map/data/license_type.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -21,13 +23,34 @@ class AddOperationScreen extends StatefulWidget {
 class _AddOperationScreenState extends State<AddOperationScreen> {
   final _myOperationInfoKey = GlobalKey<_MyOperationInfoInputFormState>();
   final _otherStationInfoKey = GlobalKey<_OtherStationInfoInputFormState>();
+  final _licenseTypeSelectionKey =
+      GlobalKey<_LicenseTypeSelectionButtonState>();
+  final _licenseModeNotifier =
+      ValueNotifier<LicenseType>(LicenseType.amateurRadio);
   final _logList = <OperationRowData>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _licenseModeNotifier.addListener(() {
+      _myOperationInfoKey.currentState?.reset();
+      _otherStationInfoKey.currentState?.reset();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.add_qso),
+        actions: [
+          _LicenseTypeSelectionButton(
+            // 1運用につき1ライセンスタイプとする
+            key: _licenseTypeSelectionKey,
+            canChangeLicenseMode: _logList.isEmpty,
+            licenseTypeNotifier: _licenseModeNotifier,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _logList.isEmpty
@@ -48,18 +71,28 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
         child: Column(
           children: [
             Text(AppLocalizations.of(context)!.my_statio_settings),
-            _MyOperationInfoInputForm(
-              key: _myOperationInfoKey,
-              // 1運用1コールサインなので、運用情報がある場合はコールサインを変更できないようにする
-              canChangeCallsign: _logList.isEmpty,
-            ),
+            ValueListenableBuilder(
+                valueListenable: _licenseModeNotifier,
+                builder: (context, type, _) {
+                  return _MyOperationInfoInputForm(
+                    key: _myOperationInfoKey,
+                    // 1運用につき1ライセンスタイプとするので、運用情報がある場合はコールサインを変更できないようにする
+                    canChangeCallsign: _logList.isEmpty,
+                    licenseType: type,
+                  );
+                }),
             const SizedBox(
               height: 8,
             ),
             Text(AppLocalizations.of(context)!.other_station_settings),
-            _OtherStationInfoInputForm(
-              key: _otherStationInfoKey,
-            ),
+            ValueListenableBuilder(
+                valueListenable: _licenseModeNotifier,
+                builder: (context, type, _) {
+                  return _OtherStationInfoInputForm(
+                    key: _otherStationInfoKey,
+                    licenseType: type,
+                  );
+                }),
             const SizedBox(
               height: 8,
             ),
@@ -82,7 +115,11 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       myOperationInfo.frequencyController.text,
                     ),
                     band: myOperationInfo.band,
-                    mode: myOperationInfo.mode,
+                    amateurRadioMode: myOperationInfo.amateurRadioMode,
+                    freeLicenseMode: myOperationInfo.freeLicenseMode,
+                    channel: int.tryParse(
+                      myOperationInfo.channelController.text,
+                    ),
                     power: double.tryParse(
                       myOperationInfo.powerController.text,
                     ),
@@ -148,8 +185,10 @@ class _MyOperationInfoInputForm extends StatefulWidget {
   const _MyOperationInfoInputForm({
     super.key,
     required this.canChangeCallsign,
+    required this.licenseType,
   });
   final bool canChangeCallsign;
+  final LicenseType licenseType;
 
   @override
   State<StatefulWidget> createState() {
@@ -166,7 +205,9 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
   final longitudeController = TextEditingController();
   final frequencyController = TextEditingController();
   AmateurRadioBand? band;
-  AmateurRadioMode? mode;
+  AmateurRadioMode? amateurRadioMode;
+  final channelController = TextEditingController();
+  FreeLicenseRadioMode? freeLicenseMode;
   final powerController = TextEditingController();
 
   @override
@@ -187,7 +228,10 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                   enabled: widget.canChangeCallsign,
                   controller: callsignController,
                   inputFormatters: [
-                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                    if (widget.licenseType == LicenseType.amateurRadio) ...[
+                      TextInputFormatter.withFunction(_uppercaseFormatter)
+                    ] else
+                      ...[]
                   ],
                   decoration: InputDecoration(
                     labelText: '${AppLocalizations.of(context)!.callsign}*',
@@ -252,82 +296,129 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                 ? ResponsiveRowColumnType.COLUMN
                 : ResponsiveRowColumnType.ROW,
             children: [
-              ResponsiveRowColumnItem(
-                rowFlex: 1,
-                child: Focus(
-                  onFocusChange: (hasFocus) {
-                    if (!hasFocus) {
-                      final frequency = double.tryParse(
-                            frequencyController.text,
-                          ) ??
-                          0;
-                      final newBand = AmateurRadioBand.fromFrequency(frequency);
-                      setState(() {
-                        if (newBand != null) {
-                          band = newBand;
-                        }
-                      });
-                    }
-                  },
-                  child: TextFormField(
-                    controller: frequencyController,
-                    decoration: InputDecoration(
-                      labelText:
-                          '${AppLocalizations.of(context)!.frequency} kHz',
-                    ),
-                    validator: (value) {
-                      final frequencyValidated =
-                          double.tryParse(value ?? '') != null;
-                      final bandValidated = band != null;
-                      if (frequencyValidated || bandValidated) {
-                        return null;
+              if (widget.licenseType == LicenseType.amateurRadio) ...[
+                // アマチュア無線向け入力フォーム
+                // 周波数・バンド・モード
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: Focus(
+                    onFocusChange: (hasFocus) {
+                      if (!hasFocus) {
+                        final frequency = double.tryParse(
+                              frequencyController.text,
+                            ) ??
+                            0;
+                        final newBand =
+                            AmateurRadioBand.fromFrequency(frequency);
+                        setState(() {
+                          if (newBand != null) {
+                            band = newBand;
+                          }
+                        });
                       }
-                      return AppLocalizations.of(context)!.frequency_error;
+                    },
+                    child: TextFormField(
+                      controller: frequencyController,
+                      decoration: InputDecoration(
+                        labelText:
+                            '${AppLocalizations.of(context)!.frequency} kHz',
+                      ),
+                      validator: (value) {
+                        final frequencyValidated =
+                            double.tryParse(value ?? '') != null;
+                        final bandValidated = band != null;
+                        if (frequencyValidated || bandValidated) {
+                          return null;
+                        }
+                        return AppLocalizations.of(context)!.frequency_error;
+                      },
+                    ),
+                  ),
+                ),
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: DropdownButtonFormField(
+                    value: band,
+                    items: [
+                      for (final band in AmateurRadioBand.values)
+                        DropdownMenuItem(
+                          value: band,
+                          child: Text(band.name),
+                        )
+                    ],
+                    hint: Text(
+                      AppLocalizations.of(context)!.band,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        band = value;
+                      });
                     },
                   ),
                 ),
-              ),
-              ResponsiveRowColumnItem(
-                rowFlex: 1,
-                child: DropdownButtonFormField(
-                  value: band,
-                  items: [
-                    for (final band in AmateurRadioBand.values)
-                      DropdownMenuItem(
-                        value: band,
-                        child: Text(band.name),
-                      )
-                  ],
-                  hint: Text(
-                    AppLocalizations.of(context)!.band,
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: DropdownButtonFormField(
+                    items: [
+                      for (final mode in AmateurRadioMode.values)
+                        DropdownMenuItem(
+                          value: mode,
+                          child: Text(mode.name),
+                        )
+                    ],
+                    hint: Text(
+                      AppLocalizations.of(context)!.mode,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        amateurRadioMode = value;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      band = value;
-                    });
-                  },
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                rowFlex: 1,
-                child: DropdownButtonFormField(
-                  items: [
-                    for (final mode in AmateurRadioMode.values)
-                      DropdownMenuItem(
-                        value: mode,
-                        child: Text(mode.name),
-                      )
-                  ],
-                  hint: Text(
-                    AppLocalizations.of(context)!.mode,
+                )
+              ] else ...[
+                // フリラ向け入力フォーム
+                // チャンネル・モード
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: TextFormField(
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    controller: channelController,
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.channel,
+                    ),
+                    validator: (value) {
+                      final channelValidated =
+                          int.tryParse(value ?? '') != null;
+                      final modeValidated = freeLicenseMode != null;
+                      if (channelValidated || modeValidated) {
+                        return null;
+                      }
+                      return AppLocalizations.of(context)!.channel_error;
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      mode = value;
-                    });
-                  },
                 ),
-              ),
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: DropdownButtonFormField(
+                    items: [
+                      for (final mode in FreeLicenseRadioMode.values)
+                        DropdownMenuItem(
+                          value: mode,
+                          child: Text(mode.localizedDescription(context)),
+                        )
+                    ],
+                    hint: Text(
+                      AppLocalizations.of(context)!.mode,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        freeLicenseMode = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
               ResponsiveRowColumnItem(
                 rowFlex: 1,
                 child: TextFormField(
@@ -347,11 +438,18 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
   bool validate() {
     return formKey.currentState?.validate() ?? false;
   }
+
+  void reset() {
+    formKey.currentState?.reset();
+  }
 }
 
 class _OtherStationInfoInputForm extends StatefulWidget {
-  const _OtherStationInfoInputForm({super.key});
-
+  const _OtherStationInfoInputForm({
+    super.key,
+    required this.licenseType,
+  });
+  final LicenseType licenseType;
   @override
   State<StatefulWidget> createState() {
     return _OtherStationInfoInputFormState();
@@ -388,7 +486,10 @@ class _OtherStationInfoInputFormState
                 child: TextFormField(
                   controller: callsignController,
                   inputFormatters: [
-                    TextInputFormatter.withFunction(_uppercaseFormatter)
+                    if (widget.licenseType == LicenseType.amateurRadio) ...[
+                      TextInputFormatter.withFunction(_uppercaseFormatter)
+                    ] else
+                      ...[]
                   ],
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.callsign,
@@ -517,12 +618,50 @@ class _OtherStationInfoInputFormState
   }
 
   void reset() {
-    callsignController.clear();
-    gridlocatorController.clear();
-    latitudeController.clear();
-    longitudeController.clear();
-    rrstController.clear();
-    srstController.clear();
+    formKey.currentState?.reset();
+  }
+}
+
+/// ライセンス形態選択ボタン
+class _LicenseTypeSelectionButton extends StatefulWidget {
+  const _LicenseTypeSelectionButton({
+    super.key,
+    required this.canChangeLicenseMode,
+    required this.licenseTypeNotifier,
+  });
+  final bool canChangeLicenseMode;
+  final ValueNotifier<LicenseType> licenseTypeNotifier;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _LicenseTypeSelectionButtonState();
+  }
+}
+
+class _LicenseTypeSelectionButtonState
+    extends State<_LicenseTypeSelectionButton> {
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton(
+      segments: [
+        for (final licenseType in LicenseType.values)
+          ButtonSegment(
+            label: Text(licenseType.localizedDescription(context)),
+            value: licenseType,
+            icon: Icon(licenseType.icon),
+          )
+      ],
+      selected: {
+        widget.licenseTypeNotifier.value,
+      },
+      onSelectionChanged: (value) {
+        setState(() {
+          if (widget.canChangeLicenseMode) {
+            widget.licenseTypeNotifier.value = value.first;
+          }
+        });
+      },
+    );
   }
 }
 

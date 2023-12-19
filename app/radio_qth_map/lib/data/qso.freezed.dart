@@ -269,7 +269,7 @@ class _$QsoImpl implements _Qso {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$QsoImpl &&
@@ -486,7 +486,7 @@ class _$QsoWithOperationImpl implements _QsoWithOperation {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$QsoWithOperationImpl &&

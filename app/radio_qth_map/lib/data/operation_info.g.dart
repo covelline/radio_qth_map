@@ -122,6 +122,7 @@ _$FreeLicenseRadioOperationInfoImpl
         _$FreeLicenseRadioOperationInfoImpl(
           id: json['id'] as String?,
           mode: $enumDecode(_$FreeLicenseRadioModeEnumMap, json['mode']),
+          channel: json['channel'] as int?,
           $type: json['runtimeType'] as String?,
         );
 
@@ -130,6 +131,7 @@ Map<String, dynamic> _$$FreeLicenseRadioOperationInfoImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'mode': _$FreeLicenseRadioModeEnumMap[instance.mode]!,
+      'channel': instance.channel,
       'runtimeType': instance.$type,
     };
 

@@ -39,7 +39,8 @@ mixin _$OperationInfo {
     required TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)
         amateur,
-    required TResult Function(String? id, FreeLicenseRadioMode mode)
+    required TResult Function(
+            String? id, FreeLicenseRadioMode mode, int? channel)
         freeLicense,
   }) =>
       throw _privateConstructorUsedError;
@@ -48,7 +49,8 @@ mixin _$OperationInfo {
     TResult? Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult? Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -56,7 +58,8 @@ mixin _$OperationInfo {
     TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -220,7 +223,7 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AmateurRadioOperationInfoImpl &&
@@ -248,7 +251,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
     required TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)
         amateur,
-    required TResult Function(String? id, FreeLicenseRadioMode mode)
+    required TResult Function(
+            String? id, FreeLicenseRadioMode mode, int? channel)
         freeLicense,
   }) {
     return amateur(id, mode, band, powerOutput);
@@ -260,7 +264,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
     TResult? Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult? Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
   }) {
     return amateur?.call(id, mode, band, powerOutput);
   }
@@ -271,7 +276,8 @@ class _$AmateurRadioOperationInfoImpl implements AmateurRadioOperationInfo {
     TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
     required TResult orElse(),
   }) {
     if (amateur != null) {
@@ -356,7 +362,7 @@ abstract class _$$FreeLicenseRadioOperationInfoImplCopyWith<$Res>
       __$$FreeLicenseRadioOperationInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, FreeLicenseRadioMode mode});
+  $Res call({String? id, FreeLicenseRadioMode mode, int? channel});
 }
 
 /// @nodoc
@@ -374,6 +380,7 @@ class __$$FreeLicenseRadioOperationInfoImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? mode = null,
+    Object? channel = freezed,
   }) {
     return _then(_$FreeLicenseRadioOperationInfoImpl(
       id: freezed == id
@@ -384,6 +391,10 @@ class __$$FreeLicenseRadioOperationInfoImplCopyWithImpl<$Res>
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
               as FreeLicenseRadioMode,
+      channel: freezed == channel
+          ? _value.channel
+          : channel // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -393,7 +404,7 @@ class __$$FreeLicenseRadioOperationInfoImplCopyWithImpl<$Res>
 class _$FreeLicenseRadioOperationInfoImpl
     implements FreeLicenseRadioOperationInfo {
   const _$FreeLicenseRadioOperationInfoImpl(
-      {this.id, required this.mode, final String? $type})
+      {this.id, required this.mode, this.channel, final String? $type})
       : $type = $type ?? 'freeLicense';
 
   factory _$FreeLicenseRadioOperationInfoImpl.fromJson(
@@ -408,26 +419,31 @@ class _$FreeLicenseRadioOperationInfoImpl
   @override
   final FreeLicenseRadioMode mode;
 
+  /// チャンネル
+  @override
+  final int? channel;
+
   @JsonKey(name: 'runtimeType')
   final String $type;
 
   @override
   String toString() {
-    return 'OperationInfo.freeLicense(id: $id, mode: $mode)';
+    return 'OperationInfo.freeLicense(id: $id, mode: $mode, channel: $channel)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FreeLicenseRadioOperationInfoImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.mode, mode) || other.mode == mode));
+            (identical(other.mode, mode) || other.mode == mode) &&
+            (identical(other.channel, channel) || other.channel == channel));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, mode);
+  int get hashCode => Object.hash(runtimeType, id, mode, channel);
 
   @JsonKey(ignore: true)
   @override
@@ -443,10 +459,11 @@ class _$FreeLicenseRadioOperationInfoImpl
     required TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)
         amateur,
-    required TResult Function(String? id, FreeLicenseRadioMode mode)
+    required TResult Function(
+            String? id, FreeLicenseRadioMode mode, int? channel)
         freeLicense,
   }) {
-    return freeLicense(id, mode);
+    return freeLicense(id, mode, channel);
   }
 
   @override
@@ -455,9 +472,10 @@ class _$FreeLicenseRadioOperationInfoImpl
     TResult? Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult? Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult? Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
   }) {
-    return freeLicense?.call(id, mode);
+    return freeLicense?.call(id, mode, channel);
   }
 
   @override
@@ -466,11 +484,12 @@ class _$FreeLicenseRadioOperationInfoImpl
     TResult Function(String? id, AmateurRadioMode? mode,
             AmateurRadioBandInfo band, double? powerOutput)?
         amateur,
-    TResult Function(String? id, FreeLicenseRadioMode mode)? freeLicense,
+    TResult Function(String? id, FreeLicenseRadioMode mode, int? channel)?
+        freeLicense,
     required TResult orElse(),
   }) {
     if (freeLicense != null) {
-      return freeLicense(id, mode);
+      return freeLicense(id, mode, channel);
     }
     return orElse();
   }
@@ -516,8 +535,9 @@ class _$FreeLicenseRadioOperationInfoImpl
 
 abstract class FreeLicenseRadioOperationInfo implements OperationInfo {
   const factory FreeLicenseRadioOperationInfo(
-          {final String? id, required final FreeLicenseRadioMode mode}) =
-      _$FreeLicenseRadioOperationInfoImpl;
+      {final String? id,
+      required final FreeLicenseRadioMode mode,
+      final int? channel}) = _$FreeLicenseRadioOperationInfoImpl;
 
   factory FreeLicenseRadioOperationInfo.fromJson(Map<String, dynamic> json) =
       _$FreeLicenseRadioOperationInfoImpl.fromJson;
@@ -530,6 +550,9 @@ abstract class FreeLicenseRadioOperationInfo implements OperationInfo {
 
   /// モード
   FreeLicenseRadioMode get mode;
+
+  /// チャンネル
+  int? get channel;
   @override
   @JsonKey(ignore: true)
   _$$FreeLicenseRadioOperationInfoImplCopyWith<

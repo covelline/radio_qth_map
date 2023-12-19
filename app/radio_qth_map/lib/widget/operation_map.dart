@@ -176,7 +176,8 @@ class OperationMapState extends State<OperationMap>
                       subtitle: Text(_dateFormat.format(e.qso.date)),
                     ),
                     ListTile(
-                      title: Text(e.operationInfo.description),
+                      title:
+                          Text(e.operationInfo.localizedDescription(context)),
                     ),
                   ],
                 ),
