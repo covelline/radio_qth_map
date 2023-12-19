@@ -409,8 +409,20 @@ class IntroduceScreen extends StatelessWidget {
             ),
           ),
           const SliverToBoxAdapter(
-            child: SizedBox(height: 12),
-          )
+            child: SizedBox(height: 56),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: TextButton(
+                onPressed: () {
+                  launchUrl(Uri.parse('https://covelline.com'));
+                },
+                child: const Text('© covelline, LLC. 2023'),
+              ),
+            ),
+          ),
         ],
       ),
     );
