@@ -15,8 +15,10 @@ jobs:
       - shell: bash
         env:
           FIREBASE_APP_CONFIGURE_DEV: ${{ secrets.FIREBASE_APP_CONFIGURE_DEV }}
+          # ビルドを通すためにとりあえずファイルを作る。デプロイはしない
         run: |
           echo "$FIREBASE_APP_CONFIGURE_DEV" > lib/firebase_options/dev.dart
+          echo "$FIREBASE_APP_CONFIGURE_DEV" > lib/firebase_options/prod.dart
           touch key.env
       - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action

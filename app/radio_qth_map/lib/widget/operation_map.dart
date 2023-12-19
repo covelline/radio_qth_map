@@ -11,6 +11,7 @@ import 'package:radio_qth_map/data/operation_info.dart';
 import 'package:radio_qth_map/data/qso.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:radio_qth_map/screen/share_operation_dialog.dart';
 import 'package:radio_qth_map/widget/infomation_marker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -172,8 +173,8 @@ class OperationMapState extends State<OperationMap>
                     ),
                     ListTile(
                       title: Text(
-                          AppLocalizations.of(context)!.operation_date), // 運用日時
-                      subtitle: Text(_dateFormat.format(e.qso.date)),
+                          "${AppLocalizations.of(context)!.operation_date} UTC"), // 運用日時
+                      subtitle: Text(_dateFormat.format(e.qso.date.toUtc())),
                     ),
                     ListTile(
                       title:
@@ -243,6 +244,20 @@ class OperationMapState extends State<OperationMap>
                   },
                   icon: const Icon(Icons.close),
                 ),
+                actions: [
+                  FilledButton.tonalIcon(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ShareOperationDialog(
+                                operationId: operation.id!);
+                          });
+                    },
+                    icon: const Icon(Icons.share),
+                    label: Text(AppLocalizations.of(context)!.share),
+                  ),
+                ],
               ),
               body: ListView(
                 children: [
@@ -252,8 +267,10 @@ class OperationMapState extends State<OperationMap>
                     subtitle: Text(operation.location.description),
                   ),
                   ListTile(
-                    title: Text(AppLocalizations.of(context)!.operation_date),
-                    subtitle: Text(_dateFormat.format(operation.dateTime)),
+                    title: Text(
+                        "${AppLocalizations.of(context)!.operation_date} UTC"),
+                    subtitle:
+                        Text(_dateFormat.format(operation.dateTime.toUtc())),
                   ),
                 ],
               )),
