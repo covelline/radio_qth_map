@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/main_router.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
@@ -10,13 +11,20 @@ import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:radio_qth_map/firebase_options/dev.dart' as dev;
+import 'package:radio_qth_map/firebase_options/prod.dart' as prod;
 
 void main() async {
   usePathUrlStrategy();
   await dotenv.load(fileName: 'key.env');
-  await Firebase.initializeApp(
-    options: dev.firebaseOptions,
-  );
+  if (dotenv.maybeGet('ENVIRONMENT') == 'prod') {
+    await Firebase.initializeApp(
+      options: prod.firebaseOptions,
+    );
+  } else {
+    await Firebase.initializeApp(
+      options: dev.firebaseOptions,
+    );
+  }
   final firestore = FirebaseFirestore.instance;
   if (dotenv.maybeGet('USE_FIRESTORE_EMULATOR') == 'true') {
     firestore.useFirestoreEmulator('localhost', 8080);
@@ -50,6 +58,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff24c5be)),
         useMaterial3: true,
+        textTheme: GoogleFonts.notoSansTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
       routerConfig: router,
       builder: (context, child) {

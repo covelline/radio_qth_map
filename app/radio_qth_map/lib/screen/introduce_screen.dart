@@ -17,12 +17,12 @@ class IntroduceScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 800,
+            expandedHeight: 400,
             title: const Text('QTH map'),
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               background: SizedBox(
-                height: 800,
+                height: 400,
                 child: Stack(
                   children: [
                     Container(

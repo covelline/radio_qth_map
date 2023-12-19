@@ -49,7 +49,12 @@ class MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QTH map'),
+        title: TextButton(
+          child: const Text('QTH map'),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
         actions: [
           Flexible(
             fit: FlexFit.loose,
