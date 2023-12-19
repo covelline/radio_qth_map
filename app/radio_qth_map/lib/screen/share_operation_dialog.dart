@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ShareOperationDialog extends StatelessWidget {
