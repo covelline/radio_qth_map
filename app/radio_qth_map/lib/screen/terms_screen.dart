@@ -15,15 +15,17 @@ class TermsScreen extends StatelessWidget {
     } else {
       terms = termsEn;
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.terms_of_use),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: MarkdownBody(
-            data: terms,
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.terms_of_use),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: MarkdownBody(
+              data: terms,
+            ),
           ),
         ),
       ),
