@@ -47,117 +47,119 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextButton(
-          child: const Text('QTH map'),
-          onPressed: () {
-            context.go('/');
-          },
-        ),
-        actions: [
-          Flexible(
-            fit: FlexFit.loose,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 280),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SearchBar(
-                  controller: _searchController,
-                  hintText: AppLocalizations.of(context)!.callsign,
-                  trailing: [
-                    IconButton(
-                      onPressed: () {
-                        _search();
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ],
-                  onSubmitted: (_) {
-                    _search();
-                  },
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: TextButton(
+            child: const Text('QTH map'),
+            onPressed: () {
+              context.go('/');
+            },
+          ),
+          actions: [
+            Flexible(
+              fit: FlexFit.loose,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 280),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SearchBar(
+                    controller: _searchController,
+                    hintText: AppLocalizations.of(context)!.callsign,
+                    trailing: [
+                      IconButton(
+                        onPressed: () {
+                          _search();
+                        },
+                        icon: const Icon(Icons.search),
+                      ),
+                    ],
+                    onSubmitted: (_) {
+                      _search();
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              showLicensePage(context: context);
-            },
-            child: Text(AppLocalizations.of(context)!.license),
-          ),
-          TextButton(
-            onPressed: () {
-              context.go('/terms');
-            },
-            child: Text(AppLocalizations.of(context)!.terms_of_use),
-          ),
-          TextButton(
-            onPressed: () {
-              launchUrl(
-                Uri.parse(
-                    "https://docs.google.com/forms/d/e/1FAIpQLSed4yjxKosyZq_LSV7APdRxKPwTr9DgP8TJD4_JagpwyQk9VA/viewform"),
-              );
-            },
-            child: Text(AppLocalizations.of(context)!.contact_us),
-          ),
-          TextButton(
-            onPressed: () {
-              launchUrl(Uri.parse("https://twitter.com/numa_radio"));
-            },
-            child: SvgPicture.asset(
-              'image/x-twitter.svg',
-              width: 24,
-              height: 24,
+            TextButton(
+              onPressed: () {
+                showLicensePage(context: context);
+              },
+              child: Text(AppLocalizations.of(context)!.license),
             ),
-          ),
-          DropdownButton<Locale>(
-            value: Locale(AppLocalizations.of(context)!.localeName),
-            items: const [
-              DropdownMenuItem(
-                value: Locale('en'),
-                child: Text('English'),
+            TextButton(
+              onPressed: () {
+                context.go('/terms');
+              },
+              child: Text(AppLocalizations.of(context)!.terms_of_use),
+            ),
+            TextButton(
+              onPressed: () {
+                launchUrl(
+                  Uri.parse(
+                      "https://docs.google.com/forms/d/e/1FAIpQLSed4yjxKosyZq_LSV7APdRxKPwTr9DgP8TJD4_JagpwyQk9VA/viewform"),
+                );
+              },
+              child: Text(AppLocalizations.of(context)!.contact_us),
+            ),
+            TextButton(
+              onPressed: () {
+                launchUrl(Uri.parse("https://twitter.com/numa_radio"));
+              },
+              child: SvgPicture.asset(
+                'image/x-twitter.svg',
+                width: 24,
+                height: 24,
               ),
-              DropdownMenuItem(
-                value: Locale('ja'),
-                child: Text('日本語'),
-              ),
-            ],
-            onChanged: (newLocale) {
-              if (newLocale != null) {
-                setState(() {
-                  context.read<LocaleNotifier>().changeLocale(newLocale);
-                });
-              }
-            },
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final newOperationId = await context.push('/qso/add');
-          if (newOperationId != null && context.mounted) {
-            context.go('/map/$newOperationId');
-          }
-        },
-        label: Text(AppLocalizations.of(context)!.add_qso),
-        icon: const Icon(Icons.add),
-      ),
-      body: OperationMap(
-        key: _operationMapKey,
-        initialCallsign: widget.initialCallsign,
-        initialOperationId: widget.operationId,
-        onOperationSelected: (operationId) {
-          setState(() {
-            if (operationId != null) {
-              if (kIsWeb) {
-                pushHistory('/map/$operationId');
-              }
-            } else {
-              _setHistoryToCurrentState();
+            ),
+            DropdownButton<Locale>(
+              value: Locale(AppLocalizations.of(context)!.localeName),
+              items: const [
+                DropdownMenuItem(
+                  value: Locale('en'),
+                  child: Text('English'),
+                ),
+                DropdownMenuItem(
+                  value: Locale('ja'),
+                  child: Text('日本語'),
+                ),
+              ],
+              onChanged: (newLocale) {
+                if (newLocale != null) {
+                  setState(() {
+                    context.read<LocaleNotifier>().changeLocale(newLocale);
+                  });
+                }
+              },
+            )
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            final newOperationId = await context.push('/qso/add');
+            if (newOperationId != null && context.mounted) {
+              context.go('/map/$newOperationId');
             }
-          });
-        },
+          },
+          label: Text(AppLocalizations.of(context)!.add_qso),
+          icon: const Icon(Icons.add),
+        ),
+        body: OperationMap(
+          key: _operationMapKey,
+          initialCallsign: widget.initialCallsign,
+          initialOperationId: widget.operationId,
+          onOperationSelected: (operationId) {
+            setState(() {
+              if (operationId != null) {
+                if (kIsWeb) {
+                  pushHistory('/map/$operationId');
+                }
+              } else {
+                _setHistoryToCurrentState();
+              }
+            });
+          },
+        ),
       ),
     );
   }
