@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart' as intl_standalone;
+import 'package:intl/intl_browser.dart' as intl_browser;
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/main_router.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
@@ -13,11 +16,14 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:radio_qth_map/firebase_options/dev.dart' as dev;
 import 'package:radio_qth_map/firebase_options/prod.dart' as prod;
-import 'package:intl/intl_browser.dart';
 
 void main() async {
   usePathUrlStrategy();
-  await findSystemLocale();
+  if (kIsWeb) {
+    await intl_browser.findSystemLocale();
+  } else {
+    await intl_standalone.findSystemLocale();
+  }
   await dotenv.load(fileName: 'key.env');
   if (dotenv.maybeGet('ENVIRONMENT') == 'prod') {
     await Firebase.initializeApp(
