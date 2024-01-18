@@ -1,4 +1,5 @@
 // ignore_for_file: unused_field, constant_identifier_names
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'amateur_radio_band.freezed.dart';
@@ -40,6 +41,25 @@ extension AmateurRadioBandExtension on AmateurRadioBandInfo {
           frequency: final frequency
         ):
         return '${band.name} ($frequency kHz)';
+    }
+  }
+
+  /// マップに表示するピンの色
+  Color get pinColor {
+    switch (this) {
+      case _AmateurRadioBandInfoBand(band: final band):
+        return band.pinColor;
+      case _AmateureRadioBandInfoFrequency(frequency: final frequency):
+        final band = AmateurRadioBand.fromFrequency(frequency);
+        if (band == null) {
+          return const Color(0xff808080);
+        }
+        return band.pinColor;
+      case _AmateureRadioBandInfoBandAndFrequency(
+          band: final band,
+          frequency: _
+        ):
+        return band.pinColor;
     }
   }
 }
@@ -234,5 +254,51 @@ enum AmateurRadioBand {
       }
     }
     return null;
+  }
+}
+
+extension AmateurRadioBandPinColor on AmateurRadioBand {
+  /// マップに表示するピンの色
+  Color get pinColor {
+    switch (this) {
+      case AmateurRadioBand.Band40m:
+        return const Color(0xff5959ff);
+      case AmateurRadioBand.Band160m:
+        return const Color(0xff7cfc00);
+      case AmateurRadioBand.Band60m:
+        return const Color(0xff00008b);
+      case AmateurRadioBand.Band80m:
+        return const Color(0xffe550e5);
+      case AmateurRadioBand.Band10m:
+        return const Color(0xffff69b4);
+      case AmateurRadioBand.Band20m:
+        return const Color(0xfff2c40c);
+      case AmateurRadioBand.Band30m:
+        return const Color(0xff62d962);
+      case AmateurRadioBand.Band15m:
+        return const Color(0xffcca166);
+      case AmateurRadioBand.Band12m:
+        return const Color(0xffb22222);
+      case AmateurRadioBand.Band17m:
+        return const Color(0xfff2f261);
+      case AmateurRadioBand.Band6m:
+        return const Color(0xffff0000);
+      case AmateurRadioBand.Band2m:
+        return const Color(0xffff1493);
+      case AmateurRadioBand.Band23cm:
+        return const Color(0xff5ab8c7);
+      case AmateurRadioBand.Band4m:
+        return const Color(0xffcc0044);
+      case AmateurRadioBand.Band70cm:
+        return const Color(0xff999900);
+      case AmateurRadioBand.Band8m:
+        return const Color(0xff7f00f1);
+      case AmateurRadioBand.Band5m:
+        return const Color(0xffe0e0e0);
+      case AmateurRadioBand.Band1_25m:
+        return const Color(0xffccff00);
+      default:
+        return const Color(0xff808080);
+    }
   }
 }

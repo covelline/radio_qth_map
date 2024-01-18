@@ -29,3 +29,19 @@ extension FreeLicenseRadioModeExtension on FreeLicenseRadioMode {
     }
   }
 }
+
+extension FreeLicenseRadioModeMapPinColor on FreeLicenseRadioMode {
+  /// マップに表示するピンの色
+  Color get pinColor {
+    switch (this) {
+      case FreeLicenseRadioMode.personalUse:
+        return Colors.blue;
+      case FreeLicenseRadioMode.lcr:
+        return Colors.green;
+      case FreeLicenseRadioMode.dcr:
+        return Colors.orange;
+      case FreeLicenseRadioMode.citizensBand:
+        return Colors.red;
+    }
+  }
+}

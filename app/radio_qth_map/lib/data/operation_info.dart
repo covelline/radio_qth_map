@@ -65,4 +65,22 @@ extension OperationInfoExtension on OperationInfo {
         return 'Mode: ${mode.localizedDescription(context)}';
     }
   }
+
+  /// マップに表示するピンの色
+  Color get pinColor {
+    switch (this) {
+      case AmateurRadioOperationInfo(
+          id: _,
+          mode: _,
+          band: final band,
+          powerOutput: _,
+        ):
+        return band.pinColor;
+      case FreeLicenseRadioOperationInfo(
+          id: _,
+          mode: final mode,
+        ):
+        return mode.pinColor;
+    }
+  }
 }

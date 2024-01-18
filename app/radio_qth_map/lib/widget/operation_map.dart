@@ -207,10 +207,10 @@ class OperationMapState extends State<OperationMap>
                   ],
                 ),
               ),
-              markerChild: const Icon(
+              markerChild: Icon(
                 Icons.location_pin,
                 size: 60,
-                color: Colors.blue,
+                color: e.operationInfo.pinColor,
               ),
               onTap: () {
                 for (var element in infoController) {
