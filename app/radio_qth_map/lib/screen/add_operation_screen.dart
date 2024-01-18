@@ -12,7 +12,6 @@ import 'package:radio_qth_map/widget/datetime_form_field.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
-import 'package:radio_qth_map/widget/date_time_ext.dart';
 
 class AddOperationScreen extends StatefulWidget {
   const AddOperationScreen({super.key});
