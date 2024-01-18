@@ -75,16 +75,28 @@ class OperationMapState extends State<OperationMap>
     _operationSubscription =
         repository.findOperations(callsign: callsign).listen((operations) {
       setState(() {
-        _operationMarkers = operations.map((operation) {
-          return Marker(
-            point: operation.location.latLng,
+        _operationMarkers =
+            operations.fold(<Marker>[], (markerList, operation) {
+          final point = operation.location.latLng;
+          // 同じ場所にマーカーがある場合、少しずらして表示する
+          final LatLng adjustedPoint;
+          if (markerList.any((element) => element.point == point)) {
+            adjustedPoint = LatLng(
+              point.latitude + 0.001,
+              point.longitude + 0.001,
+            );
+          } else {
+            adjustedPoint = point;
+          }
+          final marker = Marker(
+            point: adjustedPoint,
             child: GestureDetector(
               onTap: () {
                 _selectedOperation = operation;
                 _showOperationDetail();
                 _subscribeQSOs();
                 _animatedMapMove(
-                  operation.location.latLng,
+                  adjustedPoint,
                   10,
                 );
               },
@@ -97,7 +109,8 @@ class OperationMapState extends State<OperationMap>
             width: 60,
             height: 60,
           );
-        }).toList();
+          return markerList + [marker];
+        });
         _visibleMarkers = _operationMarkers;
       });
     });
@@ -144,13 +157,24 @@ class OperationMapState extends State<OperationMap>
           qsoWithOperations.length, (_) => GlobalKey<InformationMarkerState>());
       setState(() {
         // QSOWithOperationのマーカーと、選択されたOperationのマーカーを表示する
-        _visibleMarkers = qsoWithOperations.map((e) {
+        _visibleMarkers = qsoWithOperations.fold(<Marker>[], (markers, e) {
           final key = ValueKey(e.qso.id);
           final infoControllerKey =
               infoController[qsoWithOperations.indexOf(e)];
-          return Marker(
+          final position = e.qso.location.latLng;
+          final LatLng adjustedPosition;
+          // 同じ場所にマーカーがある場合、少しずらして表示する
+          if (markers.any((element) => element.point == position)) {
+            adjustedPosition = LatLng(
+              position.latitude + 0.001,
+              position.longitude + 0.001,
+            );
+          } else {
+            adjustedPosition = position;
+          }
+          final marker = Marker(
             key: key,
-            point: e.qso.location.latLng,
+            point: adjustedPosition,
             child: InformationMarker(
               key: infoControllerKey,
               information: Card(
@@ -208,7 +232,8 @@ class OperationMapState extends State<OperationMap>
             width: 256,
             height: 256,
           );
-        }).toList()
+          return markers + [marker];
+        })
           ..insert(
             0,
             Marker(
