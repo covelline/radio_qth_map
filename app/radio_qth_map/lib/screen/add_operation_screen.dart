@@ -8,6 +8,7 @@ import 'package:radio_qth_map/data/amateur_radio_mode.dart';
 import 'package:radio_qth_map/data/free_license_radio_mode.dart';
 import 'package:radio_qth_map/data/license_type.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:radio_qth_map/widget/datetime_form_field.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
@@ -146,12 +147,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       otherLongitude: double.tryParse(
                         otherStationInfo.longitudeController.text,
                       ),
-                      startTime: DateTimeExtension.tryParseUTC(
-                        otherStationInfo.startController.text,
-                      ),
-                      endTime: DateTimeExtension.tryParseUTC(
-                        otherStationInfo.endController.text,
-                      ),
+                      startTime:
+                          otherStationInfo.startDateTime.currentState?.value,
+                      endTime: otherStationInfo.endDateTime.currentState?.value,
                       srst: int.tryParse(
                         otherStationInfo.srstController.text,
                       ),
@@ -479,8 +477,8 @@ class _OtherStationInfoInputFormState
   final gridlocatorController = TextEditingController();
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
-  final startController = TextEditingController();
-  final endController = TextEditingController();
+  final startDateTime = GlobalKey<FormFieldState<DateTime>>();
+  final endDateTime = GlobalKey<FormFieldState<DateTime>>();
   final rrstController = TextEditingController();
   final srstController = TextEditingController();
 
@@ -565,34 +563,23 @@ class _OtherStationInfoInputFormState
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 1,
-                child: TextFormField(
-                  controller: startController,
-                  decoration: InputDecoration(
-                    labelText:
-                        '${AppLocalizations.of(context)!.start} GMT (2023-01-23 04:56:00)',
-                    hintText: '2023-01-23 04:56:00',
-                  ),
+                child: DateTimeFormField(
+                  key: startDateTime,
+                  labelText: '${AppLocalizations.of(context)!.start} UTC',
                   validator: (value) {
-                    final startValidated =
-                        DateTime.tryParse(value ?? '') != null;
-                    final endValidated =
-                        DateTime.tryParse(endController.text) != null;
-                    if (startValidated || endValidated) {
-                      return null;
+                    final endTime = endDateTime.currentState?.value;
+                    if (value == null && endTime == null) {
+                      return AppLocalizations.of(context)!.time_error;
                     }
-                    return AppLocalizations.of(context)!.time_error;
+                    return null;
                   },
                 ),
               ),
               ResponsiveRowColumnItem(
                 rowFlex: 1,
-                child: TextFormField(
-                  controller: endController,
-                  decoration: InputDecoration(
-                    labelText:
-                        '${AppLocalizations.of(context)!.end} GMT (2023-01-23 04:56:00)',
-                    hintText: '2023-01-23 04:56:00',
-                  ),
+                child: DateTimeFormField(
+                  key: endDateTime,
+                  labelText: '${AppLocalizations.of(context)!.end} UTC',
                 ),
               )
             ],
@@ -633,7 +620,10 @@ class _OtherStationInfoInputFormState
   }
 
   void reset() {
+    // start時間は近い時間を選びたくなるので保存しておく
+    final start = startDateTime.currentState?.value;
     formKey.currentState?.reset();
+    startDateTime.currentState?.didChange(start);
   }
 }
 
