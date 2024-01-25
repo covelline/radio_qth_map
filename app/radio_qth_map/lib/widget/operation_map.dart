@@ -78,16 +78,20 @@ class OperationMapState extends State<OperationMap>
         _operationMarkers =
             operations.fold(<Marker>[], (markerList, operation) {
           final point = operation.location.latLng;
-          // 同じ場所にマーカーがある場合、少しずらして表示する
-          final LatLng adjustedPoint;
-          if (markerList.any((element) => element.point == point)) {
-            adjustedPoint = LatLng(
-              point.latitude + 0.001,
-              point.longitude + 0.001,
-            );
-          } else {
-            adjustedPoint = point;
+          // 同じ場所にマーカーがあるか再帰的にチェックし、重複を防ぐ
+          LatLng distinctMarker(LatLng point) {
+            if (markerList.any((element) => element.point == point)) {
+              final adjustedPoint = LatLng(
+                point.latitude + 0.001,
+                point.longitude + 0.001,
+              );
+              return distinctMarker(adjustedPoint);
+            } else {
+              return point;
+            }
           }
+
+          final LatLng adjustedPoint = distinctMarker(point);
           final marker = Marker(
             point: adjustedPoint,
             child: GestureDetector(
