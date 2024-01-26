@@ -42,10 +42,6 @@ class AdifFileParserState extends State<AdifFileParser> {
         return previous;
       }
       final call = record['call'];
-      if (call == null) {
-        final error = previous.$2..add('no callsign at ${previous.$3 + 1}');
-        return (previous.$1, error, previous.$3 + 1);
-      }
       final startTime =
           DateTime.tryParse("${record['qso_date']}T${record['time_on']}Z");
       final endTime =
@@ -63,7 +59,9 @@ class AdifFileParserState extends State<AdifFileParser> {
         final error = previous.$2..add('QSO with $call has no location');
         return (previous.$1, error, previous.$3 + 1);
       }
-      final frequency = double.tryParse(record['freq'] ?? '');
+      final freqMegahertz = double.tryParse(record['freq'] ?? '');
+      final freqKilohertz =
+          freqMegahertz != null ? freqMegahertz * 1000.0 : null;
       final band = AmateurRadioBand.fromName(record['band'] ?? '');
       final mode = AmateurRadioMode.fromName(record['mode'] ?? '');
       final power = double.tryParse(record['tx_pwr'] ?? '');
@@ -80,7 +78,7 @@ class AdifFileParserState extends State<AdifFileParser> {
         otherLongitude: otherLongitude,
         startTime: startTime,
         endTime: endTime,
-        frequency: frequency,
+        frequency: freqKilohertz,
         band: band,
         amateurRadioMode: mode,
         power: power,

@@ -1,3 +1,4 @@
+import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -278,7 +279,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                                               });
                                               try {
                                                 final fileResult =
-                                                    await FilePicker.platform
+                                                    await FilePickerWeb.platform
                                                         .pickFiles(
                                                   type: FileType.custom,
                                                   allowedExtensions: [
