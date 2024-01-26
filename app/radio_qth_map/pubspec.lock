@@ -215,7 +215,7 @@ packages:
       path: "."
       ref: fe2a6a0f5c883e7e09e1d65e6c928b3cc10982a9
       resolved-ref: fe2a6a0f5c883e7e09e1d65e6c928b3cc10982a9
-      url: "git@github.com:numa08/dart_adif.git"
+      url: "https://github.com/numa08/dart_adif.git"
     source: git
     version: "1.0.2"
   dart_style:

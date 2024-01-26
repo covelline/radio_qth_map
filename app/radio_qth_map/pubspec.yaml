@@ -34,7 +34,7 @@ dependencies:
   google_fonts: ^6.1.0
   dart_adif:
     git:
-      url: git@github.com:numa08/dart_adif.git
+      url: https://github.com/numa08/dart_adif.git
       ref: fe2a6a0f5c883e7e09e1d65e6c928b3cc10982a9
   file_picker: ^6.1.1
 
