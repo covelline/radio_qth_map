@@ -255,6 +255,16 @@ enum AmateurRadioBand {
     }
     return null;
   }
+
+  /// Band nameからBandを取得する
+  static AmateurRadioBand? fromName(String name) {
+    for (var band in AmateurRadioBand.values) {
+      if (band.name == name) {
+        return band;
+      }
+    }
+    return null;
+  }
 }
 
 extension AmateurRadioBandPinColor on AmateurRadioBand {

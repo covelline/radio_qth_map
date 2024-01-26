@@ -95,4 +95,14 @@ enum AmateurRadioMode {
   const AmateurRadioMode(this.name);
 
   final String name;
+
+  /// Mode nameから[AmateurRadioMode]を取得する
+  static AmateurRadioMode? fromName(String name) {
+    for (var mode in AmateurRadioMode.values) {
+      if (mode.name == name) {
+        return mode;
+      }
+    }
+    return null;
+  }
 }
