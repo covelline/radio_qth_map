@@ -52,5 +52,6 @@
   "start": "Start",
   "terms_of_use": "Terms of use",
   "time_error": "Either Start or End is required",
-  "try_map_now": "Try it now !"
+  "try_map_now": "Try it now !",
+  "upload_adif": "Import .adif file"
 }

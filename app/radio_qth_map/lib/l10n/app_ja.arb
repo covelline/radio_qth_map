@@ -52,5 +52,6 @@
   "start": "開始",
   "terms_of_use": "利用規約",
   "time_error": "開始または終了時間は必須です",
-  "try_map_now": "今すぐ使ってみる"
+  "try_map_now": "今すぐ使ってみる",
+  "upload_adif": "adifを読み込む"
 }

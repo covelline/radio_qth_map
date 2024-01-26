@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,6 +9,7 @@ import 'package:radio_qth_map/data/amateur_radio_mode.dart';
 import 'package:radio_qth_map/data/free_license_radio_mode.dart';
 import 'package:radio_qth_map/data/license_type.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
+import 'package:radio_qth_map/widget/adif_parser.dart';
 import 'package:radio_qth_map/widget/datetime_form_field.dart';
 import 'package:radio_qth_map/widget/operation_row.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -25,9 +27,11 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
   final _otherStationInfoKey = GlobalKey<_OtherStationInfoInputFormState>();
   final _licenseTypeSelectionKey =
       GlobalKey<_LicenseTypeSelectionButtonState>();
+  final _adifFileParserKey = GlobalKey<AdifFileParserState>();
   final _licenseModeNotifier =
       ValueNotifier<LicenseType>(LicenseType.amateurRadio);
   final _logList = <OperationRowData>[];
+  var _loadingAdif = false;
 
   @override
   void initState() {
@@ -66,128 +70,281 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
         icon: const Icon(Icons.publish),
         tooltip: AppLocalizations.of(context)!.publish_log_tooltip,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Text(AppLocalizations.of(context)!.my_statio_settings),
-            ),
-            SliverToBoxAdapter(
-              child: ValueListenableBuilder(
-                  valueListenable: _licenseModeNotifier,
-                  builder: (context, type, _) {
-                    return _MyOperationInfoInputForm(
-                      key: _myOperationInfoKey,
-                      // 1運用につき1ライセンスタイプとするので、運用情報がある場合はコールサインを変更できないようにする
-                      canChangeCallsign: _logList.isEmpty,
-                      licenseType: type,
-                    );
-                  }),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 8,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Text(AppLocalizations.of(context)!.other_station_settings),
-            ),
-            SliverToBoxAdapter(
-              child: ValueListenableBuilder(
-                valueListenable: _licenseModeNotifier,
-                builder: (context, type, _) {
-                  return _OtherStationInfoInputForm(
-                    key: _otherStationInfoKey,
-                    licenseType: type,
-                  );
-                },
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 8,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  if (_myOperationInfoKey.currentState?.validate() == true &&
-                      _otherStationInfoKey.currentState?.validate() == true) {
-                    final myOperationInfo = _myOperationInfoKey.currentState!;
-                    final otherStationInfo = _otherStationInfoKey.currentState!;
-                    final operationRowData = OperationRowData(
-                      myCallsign: myOperationInfo.callsignController.text,
-                      myGridlocator: myOperationInfo.gridlocatorController.text,
-                      myLatitude: double.tryParse(
-                        myOperationInfo.latitudeController.text,
-                      ),
-                      myLongitude: double.tryParse(
-                        myOperationInfo.longitudeController.text,
-                      ),
-                      frequency: double.tryParse(
-                        myOperationInfo.frequencyController.text,
-                      ),
-                      band: myOperationInfo.band,
-                      amateurRadioMode: myOperationInfo.amateurRadioMode,
-                      freeLicenseMode: myOperationInfo.freeLicenseMode,
-                      channel: int.tryParse(
-                        myOperationInfo.channelController.text,
-                      ),
-                      power: double.tryParse(
-                        myOperationInfo.powerController.text,
-                      ),
-                      otherCallsign: otherStationInfo.callsignController.text,
-                      otherGridlocator:
-                          otherStationInfo.gridlocatorController.text,
-                      otherLatitude: double.tryParse(
-                        otherStationInfo.latitudeController.text,
-                      ),
-                      otherLongitude: double.tryParse(
-                        otherStationInfo.longitudeController.text,
-                      ),
-                      startTime:
-                          otherStationInfo.startDateTime.currentState?.value,
-                      endTime: otherStationInfo.endDateTime.currentState?.value,
-                      srst: int.tryParse(
-                        otherStationInfo.srstController.text,
-                      ),
-                      rrst: int.tryParse(
-                        otherStationInfo.rrstController.text,
-                      ),
-                    );
-                    setState(() {
-                      _logList.add(operationRowData);
-                    });
-                    otherStationInfo.reset();
-                  }
-                },
-                icon: const Icon(Icons.add),
-                label: Text(
-                  AppLocalizations.of(context)!.add_qso,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Text(AppLocalizations.of(context)!.my_statio_settings),
                 ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 8,
-              ),
-            ),
-            SliverList.builder(
-              itemCount: _logList.length,
-              itemBuilder: (context, index) {
-                return OperationRow(
-                  data: _logList[index],
-                  onTapDelete: () {
-                    setState(() {
-                      _logList.removeAt(index);
-                    });
+                SliverToBoxAdapter(
+                  child: ValueListenableBuilder(
+                      valueListenable: _licenseModeNotifier,
+                      builder: (context, type, _) {
+                        return _MyOperationInfoInputForm(
+                          key: _myOperationInfoKey,
+                          // 1運用につき1ライセンスタイプとするので、運用情報がある場合はコールサインを変更できないようにする
+                          canChangeCallsign: _logList.isEmpty,
+                          licenseType: type,
+                        );
+                      }),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 8,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Text(
+                      AppLocalizations.of(context)!.other_station_settings),
+                ),
+                SliverToBoxAdapter(
+                  child: ValueListenableBuilder(
+                    valueListenable: _licenseModeNotifier,
+                    builder: (context, type, _) {
+                      return _OtherStationInfoInputForm(
+                        key: _otherStationInfoKey,
+                        licenseType: type,
+                      );
+                    },
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 8,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (_myOperationInfoKey.currentState?.validate() ==
+                                  true &&
+                              _otherStationInfoKey.currentState?.validate() ==
+                                  true) {
+                            final myOperationInfo =
+                                _myOperationInfoKey.currentState!;
+                            final otherStationInfo =
+                                _otherStationInfoKey.currentState!;
+                            final operationRowData = OperationRowData(
+                              myCallsign:
+                                  myOperationInfo.callsignController.text,
+                              myGridlocator:
+                                  myOperationInfo.gridlocatorController.text,
+                              myLatitude: double.tryParse(
+                                myOperationInfo.latitudeController.text,
+                              ),
+                              myLongitude: double.tryParse(
+                                myOperationInfo.longitudeController.text,
+                              ),
+                              frequency: double.tryParse(
+                                myOperationInfo.frequencyController.text,
+                              ),
+                              band: myOperationInfo.band,
+                              amateurRadioMode:
+                                  myOperationInfo.amateurRadioMode,
+                              freeLicenseMode: myOperationInfo.freeLicenseMode,
+                              channel: int.tryParse(
+                                myOperationInfo.channelController.text,
+                              ),
+                              power: double.tryParse(
+                                myOperationInfo.powerController.text,
+                              ),
+                              otherCallsign:
+                                  otherStationInfo.callsignController.text,
+                              otherGridlocator:
+                                  otherStationInfo.gridlocatorController.text,
+                              otherLatitude: double.tryParse(
+                                otherStationInfo.latitudeController.text,
+                              ),
+                              otherLongitude: double.tryParse(
+                                otherStationInfo.longitudeController.text,
+                              ),
+                              startTime: otherStationInfo
+                                  .startDateTime.currentState?.value,
+                              endTime: otherStationInfo
+                                  .endDateTime.currentState?.value,
+                              srst: int.tryParse(
+                                otherStationInfo.srstController.text,
+                              ),
+                              rrst: int.tryParse(
+                                otherStationInfo.rrstController.text,
+                              ),
+                            );
+                            setState(() {
+                              _logList.add(operationRowData);
+                            });
+                            otherStationInfo.reset();
+                          }
+                        },
+                        icon: const Icon(Icons.add),
+                        label: Text(
+                          AppLocalizations.of(context)!.add_qso,
+                        ),
+                      ),
+                      ValueListenableBuilder(
+                          valueListenable: _licenseModeNotifier,
+                          builder: (context, value, _) {
+                            if (value == LicenseType.amateurRadio) {
+                              return Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  AdifFileParser(
+                                    key: _adifFileParserKey,
+                                    onLoadOperations: (value) {
+                                      setState(() {
+                                        _logList.addAll(value);
+                                      });
+                                    },
+                                    onErrorOperations: (value) {
+                                      // ダイアログにエラー一覧を表示する
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'error',
+                                            ),
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  for (final error in value)
+                                                    Text(error),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .close,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: ElevatedButton.icon(
+                                      icon: const Icon(Icons.upload),
+                                      label: Text(
+                                        AppLocalizations.of(context)!
+                                            .upload_adif,
+                                      ),
+                                      onPressed: !_loadingAdif
+                                          ? () async {
+                                              if (_myOperationInfoKey
+                                                      .currentState
+                                                      ?.validate(
+                                                    validateForAdifLoad: true,
+                                                  ) ==
+                                                  false) {
+                                                return;
+                                              }
+                                              final myCallSign =
+                                                  _myOperationInfoKey
+                                                      .currentState!
+                                                      .callsignController
+                                                      .text;
+                                              final myGridlocator =
+                                                  _myOperationInfoKey
+                                                      .currentState!
+                                                      .gridlocatorController
+                                                      .text;
+                                              final myLatitude =
+                                                  double.tryParse(
+                                                      _myOperationInfoKey
+                                                          .currentState!
+                                                          .latitudeController
+                                                          .text);
+                                              final myLongitude =
+                                                  double.tryParse(
+                                                _myOperationInfoKey
+                                                    .currentState!
+                                                    .longitudeController
+                                                    .text,
+                                              );
+                                              setState(() {
+                                                _loadingAdif = true;
+                                              });
+                                              try {
+                                                final fileResult =
+                                                    await FilePicker.platform
+                                                        .pickFiles(
+                                                  type: FileType.custom,
+                                                  allowedExtensions: [
+                                                    'adi',
+                                                    'adif'
+                                                  ],
+                                                  withReadStream: true,
+                                                );
+                                                final file = fileResult?.files
+                                                    .firstOrNull?.readStream;
+                                                if (file != null) {
+                                                  _adifFileParserKey
+                                                      .currentState
+                                                      ?.loadAdifFile(
+                                                    file,
+                                                    myCallSign: myCallSign,
+                                                    myGridlocator:
+                                                        myGridlocator,
+                                                    myLatitude: myLatitude,
+                                                    myLongitude: myLongitude,
+                                                  );
+                                                }
+                                              } finally {
+                                                setState(() {
+                                                  _loadingAdif = false;
+                                                });
+                                              }
+                                            }
+                                          : null,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          }),
+                    ],
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 8,
+                  ),
+                ),
+                SliverList.builder(
+                  itemCount: _logList.length,
+                  itemBuilder: (context, index) {
+                    return OperationRow(
+                      data: _logList[index],
+                      onTapDelete: () {
+                        setState(() {
+                          _logList.removeAt(index);
+                        });
+                      },
+                    );
                   },
-                );
-              },
-            )
-          ],
-        ),
+                )
+              ],
+            ),
+          ),
+          if (_loadingAdif)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
@@ -221,6 +378,7 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
   final channelController = TextEditingController();
   FreeLicenseRadioMode? freeLicenseMode;
   final powerController = TextEditingController();
+  bool _validateForAdifLoad = false;
 
   @override
   Widget build(BuildContext context) {
@@ -336,6 +494,9 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
                             '${AppLocalizations.of(context)!.frequency} kHz',
                       ),
                       validator: (value) {
+                        if (_validateForAdifLoad) {
+                          return null;
+                        }
                         final frequencyValidated =
                             double.tryParse(value ?? '') != null;
                         final bandValidated = band != null;
@@ -447,7 +608,10 @@ class _MyOperationInfoInputFormState extends State<_MyOperationInfoInputForm> {
     );
   }
 
-  bool validate() {
+  bool validate({
+    bool validateForAdifLoad = false,
+  }) {
+    _validateForAdifLoad = validateForAdifLoad;
     return formKey.currentState?.validate() ?? false;
   }
 
