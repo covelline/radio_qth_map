@@ -188,7 +188,9 @@ class OperationMapState extends State<OperationMap>
                     ListTile(
                       title: Text(
                           """${e.qso.location.description} ${e.qso.location.distanceTo(operation.location)}km"""),
-                      subtitle: Text(e.qso.callSign ?? ""),
+                      subtitle: e.qso.showCallSign && e.qso.callSign != null
+                          ? Text(e.qso.callSign!)
+                          : null,
                       trailing: IconButton(
                         onPressed: () {
                           infoControllerKey.currentState?.dismissInfomation();
