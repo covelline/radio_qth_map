@@ -140,6 +140,7 @@ class FirestoreRepository {
           endTime: element.endTime,
           rstRcvd: element.rrst?.toString(),
           rstSend: element.srst?.toString(),
+          displayCallSign: element.displayOtherCallsign,
         );
         return {
           ...previousValue,

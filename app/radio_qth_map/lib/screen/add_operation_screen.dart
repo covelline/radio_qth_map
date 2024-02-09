@@ -33,6 +33,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
       ValueNotifier<LicenseType>(LicenseType.amateurRadio);
   final _logList = <OperationRowData>[];
   var _loadingAdif = false;
+  var _displayOthersCallsignOnMap = false;
 
   @override
   void initState() {
@@ -62,7 +63,16 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             ? null
             : () async {
                 final repository = context.read<FirestoreRepository>();
-                final id = await repository.storeOperations(_logList);
+                // コールサインの表示設定を変更してから保存する
+                final id = await repository.storeOperations(
+                  _logList
+                      .map(
+                        (e) => e.copyWith(
+                          displayOtherCallsign: _displayOthersCallsignOnMap,
+                        ),
+                      )
+                      .toList(),
+                );
                 if (context.mounted) {
                   context.pop(id);
                 }
@@ -77,6 +87,45 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             padding: const EdgeInsets.all(8.0),
             child: CustomScrollView(
               slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Switch(
+                        value: _displayOthersCallsignOnMap,
+                        onChanged: (value) {
+                          setState(() {
+                            _displayOthersCallsignOnMap = value;
+                          });
+                          if (_displayOthersCallsignOnMap) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .attension_display_other_callsign_message),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .close),
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!
+                          .display_other_callsign_on_map),
+                    ],
+                  ),
+                ),
                 SliverToBoxAdapter(
                   child: Text(AppLocalizations.of(context)!.my_statio_settings),
                 ),
@@ -174,6 +223,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                               rrst: int.tryParse(
                                 otherStationInfo.rrstController.text,
                               ),
+                              displayOtherCallsign: true,
                             );
                             setState(() {
                               _logList.add(operationRowData);

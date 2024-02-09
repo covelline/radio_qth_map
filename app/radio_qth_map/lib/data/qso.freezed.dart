@@ -48,7 +48,7 @@ mixin _$Qso {
   String? get rstSend => throw _privateConstructorUsedError;
 
   /// ログ画面で相手のコールサインを表示するかどうか
-  bool get showCallSign => throw _privateConstructorUsedError;
+  bool get displayCallSign => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -69,7 +69,7 @@ abstract class $QsoCopyWith<$Res> {
       @DateTimeConverter() DateTime? endTime,
       String? rstRcvd,
       String? rstSend,
-      bool showCallSign});
+      bool displayCallSign});
 
   $LocationCopyWith<$Res> get location;
 }
@@ -94,7 +94,7 @@ class _$QsoCopyWithImpl<$Res, $Val extends Qso> implements $QsoCopyWith<$Res> {
     Object? endTime = freezed,
     Object? rstRcvd = freezed,
     Object? rstSend = freezed,
-    Object? showCallSign = null,
+    Object? displayCallSign = null,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -129,9 +129,9 @@ class _$QsoCopyWithImpl<$Res, $Val extends Qso> implements $QsoCopyWith<$Res> {
           ? _value.rstSend
           : rstSend // ignore: cast_nullable_to_non_nullable
               as String?,
-      showCallSign: null == showCallSign
-          ? _value.showCallSign
-          : showCallSign // ignore: cast_nullable_to_non_nullable
+      displayCallSign: null == displayCallSign
+          ? _value.displayCallSign
+          : displayCallSign // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -160,7 +160,7 @@ abstract class _$$QsoImplCopyWith<$Res> implements $QsoCopyWith<$Res> {
       @DateTimeConverter() DateTime? endTime,
       String? rstRcvd,
       String? rstSend,
-      bool showCallSign});
+      bool displayCallSign});
 
   @override
   $LocationCopyWith<$Res> get location;
@@ -183,7 +183,7 @@ class __$$QsoImplCopyWithImpl<$Res> extends _$QsoCopyWithImpl<$Res, _$QsoImpl>
     Object? endTime = freezed,
     Object? rstRcvd = freezed,
     Object? rstSend = freezed,
-    Object? showCallSign = null,
+    Object? displayCallSign = null,
   }) {
     return _then(_$QsoImpl(
       id: freezed == id
@@ -218,9 +218,9 @@ class __$$QsoImplCopyWithImpl<$Res> extends _$QsoCopyWithImpl<$Res, _$QsoImpl>
           ? _value.rstSend
           : rstSend // ignore: cast_nullable_to_non_nullable
               as String?,
-      showCallSign: null == showCallSign
-          ? _value.showCallSign
-          : showCallSign // ignore: cast_nullable_to_non_nullable
+      displayCallSign: null == displayCallSign
+          ? _value.displayCallSign
+          : displayCallSign // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -239,7 +239,7 @@ class _$QsoImpl implements _Qso {
       @DateTimeConverter() this.endTime,
       this.rstRcvd,
       this.rstSend,
-      this.showCallSign = false});
+      this.displayCallSign = false});
 
   factory _$QsoImpl.fromJson(Map<String, dynamic> json) =>
       _$$QsoImplFromJson(json);
@@ -282,11 +282,11 @@ class _$QsoImpl implements _Qso {
   /// ログ画面で相手のコールサインを表示するかどうか
   @override
   @JsonKey()
-  final bool showCallSign;
+  final bool displayCallSign;
 
   @override
   String toString() {
-    return 'Qso(id: $id, callSign: $callSign, location: $location, date: $date, startTime: $startTime, endTime: $endTime, rstRcvd: $rstRcvd, rstSend: $rstSend, showCallSign: $showCallSign)';
+    return 'Qso(id: $id, callSign: $callSign, location: $location, date: $date, startTime: $startTime, endTime: $endTime, rstRcvd: $rstRcvd, rstSend: $rstSend, displayCallSign: $displayCallSign)';
   }
 
   @override
@@ -305,14 +305,14 @@ class _$QsoImpl implements _Qso {
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.rstRcvd, rstRcvd) || other.rstRcvd == rstRcvd) &&
             (identical(other.rstSend, rstSend) || other.rstSend == rstSend) &&
-            (identical(other.showCallSign, showCallSign) ||
-                other.showCallSign == showCallSign));
+            (identical(other.displayCallSign, displayCallSign) ||
+                other.displayCallSign == displayCallSign));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, callSign, location, date,
-      startTime, endTime, rstRcvd, rstSend, showCallSign);
+      startTime, endTime, rstRcvd, rstSend, displayCallSign);
 
   @JsonKey(ignore: true)
   @override
@@ -338,7 +338,7 @@ abstract class _Qso implements Qso {
       @DateTimeConverter() final DateTime? endTime,
       final String? rstRcvd,
       final String? rstSend,
-      final bool showCallSign}) = _$QsoImpl;
+      final bool displayCallSign}) = _$QsoImpl;
 
   factory _Qso.fromJson(Map<String, dynamic> json) = _$QsoImpl.fromJson;
 
@@ -380,7 +380,7 @@ abstract class _Qso implements Qso {
   @override
 
   /// ログ画面で相手のコールサインを表示するかどうか
-  bool get showCallSign;
+  bool get displayCallSign;
   @override
   @JsonKey(ignore: true)
   _$$QsoImplCopyWith<_$QsoImpl> get copyWith =>

@@ -188,7 +188,7 @@ class OperationMapState extends State<OperationMap>
                     ListTile(
                       title: Text(
                           """${e.qso.location.description} ${e.qso.location.distanceTo(operation.location)}km"""),
-                      subtitle: e.qso.showCallSign && e.qso.callSign != null
+                      subtitle: e.qso.displayCallSign && e.qso.callSign != null
                           ? Text(e.qso.callSign!)
                           : null,
                       trailing: IconButton(

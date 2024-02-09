@@ -17,7 +17,7 @@ _$QsoImpl _$$QsoImplFromJson(Map<String, dynamic> json) => _$QsoImpl(
           json['endTime'], const DateTimeConverter().fromJson),
       rstRcvd: json['rstRcvd'] as String?,
       rstSend: json['rstSend'] as String?,
-      showCallSign: json['showCallSign'] as bool? ?? false,
+      displayCallSign: json['displayCallSign'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$QsoImplToJson(_$QsoImpl instance) => <String, dynamic>{
@@ -31,7 +31,7 @@ Map<String, dynamic> _$$QsoImplToJson(_$QsoImpl instance) => <String, dynamic>{
           instance.endTime, const DateTimeConverter().toJson),
       'rstRcvd': instance.rstRcvd,
       'rstSend': instance.rstSend,
-      'showCallSign': instance.showCallSign,
+      'displayCallSign': instance.displayCallSign,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

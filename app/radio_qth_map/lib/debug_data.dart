@@ -20,6 +20,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 10, 18, 2, 37, 3),
         srst: -5,
         rrst: -3,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/P',
@@ -35,6 +36,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 10, 18, 2, 31, 1),
         srst: -6,
         rrst: -13,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/P',
@@ -50,6 +52,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 10, 18, 2, 25, 3),
         srst: -11,
         rrst: -13,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/P',
@@ -65,6 +68,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 10, 18, 2, 15, 1),
         srst: -5,
         rrst: -3,
+        displayOtherCallsign: false,
       ),
     ]);
     repository.storeOperations([
@@ -82,6 +86,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 9, 8, 00, 50, 00),
         srst: 56,
         rrst: 58,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -97,6 +102,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 9, 8, 1, 00, 00),
         srst: 56,
         rrst: 58,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -112,6 +118,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 9, 8, 1, 2, 00),
         srst: 51,
         rrst: 51,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -127,6 +134,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 9, 8, 1, 5, 00),
         srst: 59,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -142,6 +150,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 9, 8, 1, 8, 2),
         srst: 55,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
     ]);
     repository.storeOperations([
@@ -159,6 +168,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 27, 2),
         srst: 55,
         rrst: 56,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -174,6 +184,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 27, 2),
         srst: 55,
         rrst: 56,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -189,6 +200,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 35, 4),
         srst: 59,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -204,6 +216,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 41, 1),
         srst: 52,
         rrst: 55,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -219,6 +232,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 43, 0),
         srst: 59,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -234,6 +248,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 45, 0),
         srst: 52,
         rrst: 51,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -249,6 +264,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 48, 0),
         srst: 51,
         rrst: 57,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -264,6 +280,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 52, 0),
         srst: 52,
         rrst: 55,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -279,6 +296,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         endTime: DateTime.utc(2023, 8, 10, 1, 59, 0),
         srst: 55,
         rrst: 55,
+        displayOtherCallsign: false,
       ),
     ]);
     repository.storeOperations([
@@ -295,6 +313,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         startTime: DateTime.utc(2023, 7, 5, 0, 32, 00),
         srst: 59,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -309,6 +328,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         startTime: DateTime.utc(2023, 7, 5, 0, 36, 00),
         srst: 51,
         rrst: 52,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -323,6 +343,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         startTime: DateTime.utc(2023, 7, 5, 0, 41, 00),
         srst: 59,
         rrst: 59,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -337,6 +358,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         startTime: DateTime.utc(2023, 7, 5, 0, 52, 00),
         srst: 57,
         rrst: 53,
+        displayOtherCallsign: false,
       ),
       OperationRowData(
         myCallsign: 'JK1TUT/1',
@@ -351,6 +373,7 @@ Future<void> insertDebugData(FirestoreRepository repository) async {
         startTime: DateTime.utc(2023, 7, 5, 0, 58, 00),
         srst: 55,
         rrst: 57,
+        displayOtherCallsign: false,
       ),
     ]);
     return true;
