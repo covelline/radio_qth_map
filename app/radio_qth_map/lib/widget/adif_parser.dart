@@ -84,6 +84,7 @@ class AdifFileParserState extends State<AdifFileParser> {
         power: power,
         srst: srst,
         rrst: rrst,
+        displayOtherCallsign: true,
       );
       final operations = previous.$1..add(operation);
       return (operations, previous.$2, previous.$3 + 1);

@@ -37,6 +37,9 @@ class Qso with _$Qso {
 
     /// 送信したレポート
     String? rstSend,
+
+    /// ログ画面で相手のコールサインを表示するかどうか
+    @Default(false) bool displayCallSign,
   }) = _Qso;
 
   factory Qso.fromJson(String id, Map<String, dynamic> json) =>

@@ -35,6 +35,7 @@ mixin _$OperationRowData {
   DateTime? get endTime => throw _privateConstructorUsedError;
   int? get srst => throw _privateConstructorUsedError;
   int? get rrst => throw _privateConstructorUsedError;
+  bool get displayOtherCallsign => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $OperationRowDataCopyWith<OperationRowData> get copyWith =>
@@ -65,7 +66,8 @@ abstract class $OperationRowDataCopyWith<$Res> {
       DateTime? startTime,
       DateTime? endTime,
       int? srst,
-      int? rrst});
+      int? rrst,
+      bool displayOtherCallsign});
 }
 
 /// @nodoc
@@ -99,6 +101,7 @@ class _$OperationRowDataCopyWithImpl<$Res, $Val extends OperationRowData>
     Object? endTime = freezed,
     Object? srst = freezed,
     Object? rrst = freezed,
+    Object? displayOtherCallsign = null,
   }) {
     return _then(_value.copyWith(
       myCallsign: null == myCallsign
@@ -173,6 +176,10 @@ class _$OperationRowDataCopyWithImpl<$Res, $Val extends OperationRowData>
           ? _value.rrst
           : rrst // ignore: cast_nullable_to_non_nullable
               as int?,
+      displayOtherCallsign: null == displayOtherCallsign
+          ? _value.displayOtherCallsign
+          : displayOtherCallsign // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -203,7 +210,8 @@ abstract class _$$OperationRowDataImplCopyWith<$Res>
       DateTime? startTime,
       DateTime? endTime,
       int? srst,
-      int? rrst});
+      int? rrst,
+      bool displayOtherCallsign});
 }
 
 /// @nodoc
@@ -235,6 +243,7 @@ class __$$OperationRowDataImplCopyWithImpl<$Res>
     Object? endTime = freezed,
     Object? srst = freezed,
     Object? rrst = freezed,
+    Object? displayOtherCallsign = null,
   }) {
     return _then(_$OperationRowDataImpl(
       myCallsign: null == myCallsign
@@ -309,6 +318,10 @@ class __$$OperationRowDataImplCopyWithImpl<$Res>
           ? _value.rrst
           : rrst // ignore: cast_nullable_to_non_nullable
               as int?,
+      displayOtherCallsign: null == displayOtherCallsign
+          ? _value.displayOtherCallsign
+          : displayOtherCallsign // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -334,7 +347,8 @@ class _$OperationRowDataImpl implements _OperationRowData {
       this.startTime,
       this.endTime,
       this.srst,
-      this.rrst})
+      this.rrst,
+      required this.displayOtherCallsign})
       : assert(
             myGridlocator != null ||
                 (myLatitude != null && myLongitude != null),
@@ -384,10 +398,12 @@ class _$OperationRowDataImpl implements _OperationRowData {
   final int? srst;
   @override
   final int? rrst;
+  @override
+  final bool displayOtherCallsign;
 
   @override
   String toString() {
-    return 'OperationRowData(myCallsign: $myCallsign, myGridlocator: $myGridlocator, myLatitude: $myLatitude, myLongitude: $myLongitude, frequency: $frequency, band: $band, amateurRadioMode: $amateurRadioMode, freeLicenseMode: $freeLicenseMode, channel: $channel, power: $power, otherCallsign: $otherCallsign, otherGridlocator: $otherGridlocator, otherLatitude: $otherLatitude, otherLongitude: $otherLongitude, startTime: $startTime, endTime: $endTime, srst: $srst, rrst: $rrst)';
+    return 'OperationRowData(myCallsign: $myCallsign, myGridlocator: $myGridlocator, myLatitude: $myLatitude, myLongitude: $myLongitude, frequency: $frequency, band: $band, amateurRadioMode: $amateurRadioMode, freeLicenseMode: $freeLicenseMode, channel: $channel, power: $power, otherCallsign: $otherCallsign, otherGridlocator: $otherGridlocator, otherLatitude: $otherLatitude, otherLongitude: $otherLongitude, startTime: $startTime, endTime: $endTime, srst: $srst, rrst: $rrst, displayOtherCallsign: $displayOtherCallsign)';
   }
 
   @override
@@ -424,30 +440,34 @@ class _$OperationRowDataImpl implements _OperationRowData {
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.srst, srst) || other.srst == srst) &&
-            (identical(other.rrst, rrst) || other.rrst == rrst));
+            (identical(other.rrst, rrst) || other.rrst == rrst) &&
+            (identical(other.displayOtherCallsign, displayOtherCallsign) ||
+                other.displayOtherCallsign == displayOtherCallsign));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      myCallsign,
-      myGridlocator,
-      myLatitude,
-      myLongitude,
-      frequency,
-      band,
-      amateurRadioMode,
-      freeLicenseMode,
-      channel,
-      power,
-      otherCallsign,
-      otherGridlocator,
-      otherLatitude,
-      otherLongitude,
-      startTime,
-      endTime,
-      srst,
-      rrst);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        myCallsign,
+        myGridlocator,
+        myLatitude,
+        myLongitude,
+        frequency,
+        band,
+        amateurRadioMode,
+        freeLicenseMode,
+        channel,
+        power,
+        otherCallsign,
+        otherGridlocator,
+        otherLatitude,
+        otherLongitude,
+        startTime,
+        endTime,
+        srst,
+        rrst,
+        displayOtherCallsign
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -476,7 +496,8 @@ abstract class _OperationRowData implements OperationRowData {
       final DateTime? startTime,
       final DateTime? endTime,
       final int? srst,
-      final int? rrst}) = _$OperationRowDataImpl;
+      final int? rrst,
+      required final bool displayOtherCallsign}) = _$OperationRowDataImpl;
 
   @override
   String get myCallsign;
@@ -514,6 +535,8 @@ abstract class _OperationRowData implements OperationRowData {
   int? get srst;
   @override
   int? get rrst;
+  @override
+  bool get displayOtherCallsign;
   @override
   @JsonKey(ignore: true)
   _$$OperationRowDataImplCopyWith<_$OperationRowDataImpl> get copyWith =>

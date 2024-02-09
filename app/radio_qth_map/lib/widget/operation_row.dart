@@ -38,6 +38,7 @@ class OperationRowData with _$OperationRowData {
     DateTime? endTime,
     int? srst,
     int? rrst,
+    required bool displayOtherCallsign,
   }) = _OperationRowData;
 }
 
