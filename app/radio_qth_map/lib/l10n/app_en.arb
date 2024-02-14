@@ -53,6 +53,8 @@
   "share": "Share",
   "share_operation_format": "To check the log operated by {callsign} on {date} on the map.",
   "share_with_x": "To post on X (Twitter)",
+  "show_all": "Show all",
+  "shrink": "Shring",
   "start": "Start",
   "terms_of_use": "Terms of use",
   "time_error": "Either Start or End is required",

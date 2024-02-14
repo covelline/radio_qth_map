@@ -53,6 +53,8 @@
   "share": "共有する",
   "share_operation_format": "{callsign} が {date} に運用したログを地図で確認する",
   "share_with_x": "X（Twitter）に投稿する",
+  "show_all": "全て見る",
+  "shrink": "折りたたむ",
   "start": "開始",
   "terms_of_use": "利用規約",
   "time_error": "開始または終了時間は必須です",
