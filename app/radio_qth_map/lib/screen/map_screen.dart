@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
@@ -144,21 +145,97 @@ class MapScreenState extends State<MapScreen> {
           label: Text(AppLocalizations.of(context)!.add_qso),
           icon: const Icon(Icons.add),
         ),
-        body: OperationMap(
-          key: _operationMapKey,
-          initialCallsign: widget.initialCallsign,
-          initialOperationId: widget.operationId,
-          onOperationSelected: (operationId) {
-            setState(() {
-              if (operationId != null) {
-                if (kIsWeb) {
-                  pushHistory('/map/$operationId');
-                }
-              } else {
-                _setHistoryToCurrentState();
-              }
-            });
-          },
+        body: Stack(
+          children: [
+            OperationMap(
+              key: _operationMapKey,
+              initialCallsign: widget.initialCallsign,
+              initialOperationId: widget.operationId,
+              onOperationSelected: (operationId) {
+                setState(() {
+                  if (operationId != null) {
+                    if (kIsWeb) {
+                      pushHistory('/map/$operationId');
+                    }
+                  } else {
+                    _setHistoryToCurrentState();
+                  }
+                });
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IntrinsicWidth(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: const Icon(
+                            Icons.location_pin,
+                            size: 30,
+                            color: Colors.red,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context)!.operation,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        ...[
+                          AmateurRadioBand.Band160m,
+                          AmateurRadioBand.Band80m,
+                          AmateurRadioBand.Band60m,
+                          AmateurRadioBand.Band40m,
+                          AmateurRadioBand.Band30m,
+                          AmateurRadioBand.Band20m,
+                          AmateurRadioBand.Band17m,
+                          AmateurRadioBand.Band15m,
+                          AmateurRadioBand.Band12m,
+                          AmateurRadioBand.Band10m,
+                          AmateurRadioBand.Band8m,
+                          AmateurRadioBand.Band6m,
+                          AmateurRadioBand.Band5m,
+                          AmateurRadioBand.Band4m,
+                          AmateurRadioBand.Band2m,
+                          AmateurRadioBand.Band1_25m,
+                          AmateurRadioBand.Band70cm,
+                          AmateurRadioBand.Band23cm,
+                        ].map(
+                          (e) => ListTile(
+                            leading: Icon(
+                              Icons.location_pin,
+                              size: 15,
+                              color: e.pinColor,
+                            ),
+                            title: Text(
+                              e.name,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.location_pin,
+                            size: 15,
+                            color: AmateurRadioBand.submm.pinColor,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context)!.others,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
