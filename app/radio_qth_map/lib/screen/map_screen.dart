@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/service/history.dart';
+import 'package:radio_qth_map/widget/amateur_radio_band_legend.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -144,21 +145,29 @@ class MapScreenState extends State<MapScreen> {
           label: Text(AppLocalizations.of(context)!.add_qso),
           icon: const Icon(Icons.add),
         ),
-        body: OperationMap(
-          key: _operationMapKey,
-          initialCallsign: widget.initialCallsign,
-          initialOperationId: widget.operationId,
-          onOperationSelected: (operationId) {
-            setState(() {
-              if (operationId != null) {
-                if (kIsWeb) {
-                  pushHistory('/map/$operationId');
-                }
-              } else {
-                _setHistoryToCurrentState();
-              }
-            });
-          },
+        body: Stack(
+          children: [
+            OperationMap(
+              key: _operationMapKey,
+              initialCallsign: widget.initialCallsign,
+              initialOperationId: widget.operationId,
+              onOperationSelected: (operationId) {
+                setState(() {
+                  if (operationId != null) {
+                    if (kIsWeb) {
+                      pushHistory('/map/$operationId');
+                    }
+                  } else {
+                    _setHistoryToCurrentState();
+                  }
+                });
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: AmateurRadioBandLegend(),
+            ),
+          ],
         ),
       ),
     );
