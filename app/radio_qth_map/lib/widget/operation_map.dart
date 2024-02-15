@@ -99,10 +99,6 @@ class OperationMapState extends State<OperationMap>
                 _selectedOperation = operation;
                 _showOperationDetail();
                 _subscribeQSOs();
-                _animatedMapMove(
-                  adjustedPoint,
-                  10,
-                );
               },
               child: const Icon(
                 Icons.location_pin,
@@ -140,10 +136,6 @@ class OperationMapState extends State<OperationMap>
       _selectedOperation = operation;
       _showOperationDetail();
       _subscribeQSOs();
-      _animatedMapMove(
-        operation.location.latLng,
-        10,
-      );
     });
   }
 
@@ -179,6 +171,7 @@ class OperationMapState extends State<OperationMap>
           final marker = Marker(
             key: key,
             point: adjustedPosition,
+            alignment: Alignment.topCenter,
             child: InformationMarker(
               key: infoControllerKey,
               information: Card(
@@ -236,7 +229,7 @@ class OperationMapState extends State<OperationMap>
               },
             ),
             width: 256,
-            height: 256,
+            height: 312,
           );
           return markers + [marker];
         })
@@ -254,6 +247,15 @@ class OperationMapState extends State<OperationMap>
             ),
           );
         widget.onOperationSelected(operation.id);
+        // カメラの移動
+        _animatedMapMove(
+          CameraFit.bounds(
+            bounds: LatLngBounds.fromPoints(
+              _visibleMarkers.map((e) => e.point).toList(),
+            ),
+            padding: const EdgeInsets.all(12),
+          ),
+        );
       });
     });
   }
@@ -344,15 +346,16 @@ class OperationMapState extends State<OperationMap>
     });
   }
 
-  void _animatedMapMove(LatLng destLocation, double destZoom) {
+  void _animatedMapMove(CameraFit cameraFit) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
     final camera = _mapController.camera;
+    final fitted = cameraFit.fit(camera);
     final latTween = Tween<double>(
-        begin: camera.center.latitude, end: destLocation.latitude);
+        begin: camera.center.latitude, end: fitted.center.latitude);
     final lngTween = Tween<double>(
-        begin: camera.center.longitude, end: destLocation.longitude);
-    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+        begin: camera.center.longitude, end: fitted.center.longitude);
+    final zoomTween = Tween<double>(begin: camera.zoom, end: fitted.zoom);
 
     // Create a animation controller that has a duration and a TickerProvider.
     final controller = AnimationController(
@@ -367,7 +370,7 @@ class OperationMapState extends State<OperationMap>
     // to detect an appropriate animated movement event which contains the
     // target zoom/center.
     final startIdWithTarget =
-        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+        '$_startedId#${fitted.center.latitude},${fitted.center.longitude},${fitted.zoom}';
     bool hasTriggeredMove = false;
 
     controller.addListener(() {
