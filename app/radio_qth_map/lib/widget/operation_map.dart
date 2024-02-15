@@ -179,6 +179,7 @@ class OperationMapState extends State<OperationMap>
           final marker = Marker(
             key: key,
             point: adjustedPosition,
+            alignment: Alignment.topCenter,
             child: InformationMarker(
               key: infoControllerKey,
               information: Card(
@@ -236,7 +237,7 @@ class OperationMapState extends State<OperationMap>
               },
             ),
             width: 256,
-            height: 256,
+            height: 312,
           );
           return markers + [marker];
         })

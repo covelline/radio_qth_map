@@ -28,15 +28,15 @@ class InformationMarkerState extends State<InformationMarker> {
           _onSelected = true;
         });
       },
-      child: Stack(
-        alignment: Alignment.center,
+      child: Column(
+        verticalDirection: VerticalDirection.up,
         children: [
           widget.markerChild,
           if (_onSelected)
             GestureDetector(
               onTap: dismissInfomation,
               child: widget.information,
-            ),
+            )
         ],
       ),
     );
