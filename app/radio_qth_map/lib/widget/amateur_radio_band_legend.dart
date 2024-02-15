@@ -28,10 +28,8 @@ class _AmateurRadioBandLegendState extends State<AmateurRadioBandLegend> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: expanded ? null : 100,
+          Expanded(
             child: ListView(
-              shrinkWrap: expanded,
               children: [
                 ListTile(
                   leading: const Icon(
