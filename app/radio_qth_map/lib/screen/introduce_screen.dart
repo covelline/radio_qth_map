@@ -422,7 +422,7 @@ class IntroduceScreen extends StatelessWidget {
                   onPressed: () {
                     launchUrl(Uri.parse('https://covelline.com'));
                   },
-                  child: const Text('© covelline, LLC. 2023'),
+                  child: Text("© covelline, LLC. ${DateTime.now().year}"),
                 ),
               ),
             ),
