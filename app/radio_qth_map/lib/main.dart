@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl_standalone.dart' as intl_standalone;
 import 'package:intl/intl_browser.dart' as intl_browser;
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/main_router.dart';
+import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -35,8 +37,10 @@ void main() async {
     );
   }
   final firestore = FirebaseFirestore.instance;
+  final auth = FirebaseAuth.instance;
   if (dotenv.maybeGet('USE_FIRESTORE_EMULATOR') == 'true') {
     firestore.useFirestoreEmulator('localhost', 8080);
+    auth.useAuthEmulator('localhost', 9099);
   }
   final Locale defaultLocale;
   if (Intl.getCurrentLocale().startsWith('ja')) {
@@ -51,6 +55,7 @@ void main() async {
           create: (_) => FirestoreRepository(firestore: firestore),
         ),
         ChangeNotifierProvider(create: (_) => LocaleNotifier(defaultLocale)),
+        ChangeNotifierProvider(create: (_) => AuthStateNotifier(auth: auth)),
       ],
       child: const MyApp(),
     ),

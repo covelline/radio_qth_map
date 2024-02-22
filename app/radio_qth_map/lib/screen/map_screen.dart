@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/amateur_radio_band_legend.dart';
+import 'package:radio_qth_map/widget/login_text_button.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -103,16 +103,6 @@ class MapScreenState extends State<MapScreen> {
               },
               child: Text(AppLocalizations.of(context)!.contact_us),
             ),
-            TextButton(
-              onPressed: () {
-                launchUrl(Uri.parse("https://twitter.com/numa_radio"));
-              },
-              child: SvgPicture.asset(
-                'image/x-twitter.svg',
-                width: 24,
-                height: 24,
-              ),
-            ),
             DropdownButton<Locale>(
               value: Locale(AppLocalizations.of(context)!.localeName),
               items: const [
@@ -132,7 +122,8 @@ class MapScreenState extends State<MapScreen> {
                   });
                 }
               },
-            )
+            ),
+            const LoginTextButton(),
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
