@@ -7,11 +7,17 @@ import 'package:provider/provider.dart';
 import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'dart:ui' as ui;
 
 class ShareOperationDialog extends StatelessWidget {
-  const ShareOperationDialog({super.key, required this.operationId});
+  const ShareOperationDialog({
+    super.key,
+    required this.operationId,
+    this.mapCapture,
+  });
 
   final String operationId;
+  final ui.Image? mapCapture;
 
   @override
   Widget build(BuildContext context) {

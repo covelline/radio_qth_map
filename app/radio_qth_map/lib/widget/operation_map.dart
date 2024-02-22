@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,8 +13,8 @@ import 'package:radio_qth_map/data/operation_info.dart';
 import 'package:radio_qth_map/data/qso.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
-import 'package:radio_qth_map/screen/share_operation_dialog.dart';
 import 'package:radio_qth_map/widget/infomation_marker.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OperationMap extends StatefulWidget {
@@ -43,6 +45,8 @@ class OperationMapState extends State<OperationMap>
   late StreamSubscription<List<Operation>> _operationSubscription;
   StreamSubscription<List<QsoWithOperation>>? _qsoWithOperationSubscription;
   final _mapController = MapController();
+  final _mapRendererKey = GlobalKey();
+
   late DateFormat _dateFormat;
 
   Operation? _selectedOperation;
@@ -279,13 +283,34 @@ class OperationMapState extends State<OperationMap>
                 ),
                 actions: [
                   FilledButton.tonalIcon(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ShareOperationDialog(
-                                operationId: operation.id!);
-                          });
+                    onPressed: () async {
+                      final render = _mapRendererKey.currentContext!
+                          .findRenderObject()! as RenderRepaintBoundary;
+                      final mapCapture = await render.toImage();
+                      final byteData = await mapCapture.toByteData(
+                        format: ImageByteFormat.png,
+                      );
+                      if (!context.mounted) {
+                        return;
+                      }
+                      final dateFormat = DateFormat.yMd(
+                        AppLocalizations.of(context)!.localeName,
+                      );
+                      final shareText =
+                          AppLocalizations.of(context)!.share_operation_format(
+                        operation.callsign,
+                        dateFormat.format(operation.dateTime.toUtc()),
+                      );
+                      await Share.shareXFiles(
+                        [
+                          XFile.fromData(
+                            byteData!.buffer.asUint8List(),
+                            name: 'map.png',
+                            mimeType: 'image/png',
+                          ),
+                        ],
+                        text: shareText,
+                      );
                     },
                     icon: const Icon(Icons.share),
                     label: Text(AppLocalizations.of(context)!.share),
@@ -409,36 +434,39 @@ class OperationMapState extends State<OperationMap>
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      mapController: _mapController,
-      options: const MapOptions(
-        initialCenter: LatLng(0, 0),
-        initialZoom: 2,
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: "com.covelline.radio_qth_map",
-          tileProvider: NetworkTileProvider(),
+    return RepaintBoundary(
+      key: _mapRendererKey,
+      child: FlutterMap(
+        mapController: _mapController,
+        options: const MapOptions(
+          initialCenter: LatLng(0, 0),
+          initialZoom: 2,
         ),
-        PolylineLayer(
-          polylines: _distanceLines,
-        ),
-        MarkerLayer(
-          markers: _visibleMarkers,
-        ),
-        RichAttributionWidget(
-          attributions: [
-            TextSourceAttribution(
-              'OpenStreetMap contributors',
-              onTap: () => launchUrl(
-                Uri.parse('https://openstreetmap.org/copyright'),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: "com.covelline.radio_qth_map",
+            tileProvider: NetworkTileProvider(),
+          ),
+          PolylineLayer(
+            polylines: _distanceLines,
+          ),
+          MarkerLayer(
+            markers: _visibleMarkers,
+          ),
+          RichAttributionWidget(
+            attributions: [
+              TextSourceAttribution(
+                'OpenStreetMap contributors',
+                onTap: () => launchUrl(
+                  Uri.parse('https://openstreetmap.org/copyright'),
+                ),
               ),
-            ),
-          ],
-          alignment: AttributionAlignment.bottomLeft,
-        )
-      ],
+            ],
+            alignment: AttributionAlignment.bottomLeft,
+          )
+        ],
+      ),
     );
   }
 }
