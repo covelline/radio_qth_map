@@ -38,6 +38,8 @@ dependencies:
       ref: fe2a6a0f5c883e7e09e1d65e6c928b3cc10982a9
   file_picker: ^6.1.1
   firebase_analytics: ^10.8.0
+  firebase_auth: ^4.17.4
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
