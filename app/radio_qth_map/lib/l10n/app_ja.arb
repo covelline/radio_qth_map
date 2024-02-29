@@ -1,6 +1,7 @@
 {
   "about_me": "開発・運用者",
   "add_qso": "ログを追加する",
+  "agree_to_terms": "利用規約に同意する",
   "app_description": "無線体験を可視化する運用ログマッピングツール",
   "attension_display_other_callsign_message": "相手のコールサインを地図上に表示する場合は、プライバシーに配慮してください。",
   "band": "バンド",

@@ -111,6 +111,7 @@ class _EmailAddressFormState extends State<_EmailAddressForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailFormController = TextEditingController();
   var _sendStatus = _EmailAddressSendStatus.initial;
+  var _isChecked = false;
 
   @override
   void didChangeDependencies() {
@@ -121,67 +122,88 @@ class _EmailAddressFormState extends State<_EmailAddressForm> {
   @override
   Widget build(BuildContext context) {
     final auth = context.read<AuthStateNotifier>().auth;
-    return Form(
-        key: _formKey,
-        child: ResponsiveRowColumn(
-          rowSpacing: 8,
-          layout: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-              ? ResponsiveRowColumnType.COLUMN
-              : ResponsiveRowColumnType.ROW,
+    return Column(
+      children: [
+        Row(
           children: [
-            ResponsiveRowColumnItem(
-              rowFlex: 3,
-              child: TextFormField(
-                controller: _emailFormController,
-                decoration: InputDecoration(
-                    label: Text(AppLocalizations.of(context)!.mail_address)),
-                validator: (value) {
-                  final result = EmailValidator.validate(value ?? '');
-                  if (result) {
-                    return null;
-                  }
-                  return AppLocalizations.of(context)!.enter_your_email_address;
-                },
-              ),
+            Checkbox(
+              value: _isChecked,
+              onChanged: (value) {
+                setState(() {
+                  _isChecked = value ?? false;
+                });
+              },
             ),
-            ResponsiveRowColumnItem(
-              rowFlex: 1,
-              child: FilledButton.icon(
-                onPressed: _sendStatus == _EmailAddressSendStatus.initial
-                    ? () async {
-                        if (_formKey.currentState?.validate() == true) {
-                          setState(() {
-                            _sendStatus = _EmailAddressSendStatus.sending;
-                            widget.sendStatusChanged(_sendStatus);
-                          });
-                          try {
-                            final setting = ActionCodeSettings(
-                              url: 'http://localhost/verification',
-                              handleCodeInApp: true,
-                            );
-                            setState(() {
-                              _sendStatus = _EmailAddressSendStatus.completed;
-                              widget.sendStatusChanged(_sendStatus);
-                            });
-                            await auth.sendSignInLinkToEmail(
-                                email: _emailFormController.text,
-                                actionCodeSettings: setting);
-                          } catch (e) {
-                            debugPrint("failed send $e");
-                            setState(() {
-                              _sendStatus = _EmailAddressSendStatus.error;
-                              widget.sendStatusChanged(_sendStatus);
-                            });
-                          }
-                        }
-                      }
-                    : null,
-                icon: const Icon(Icons.send),
-                label: Text(AppLocalizations.of(context)!.send),
-              ),
-            )
+            Text(AppLocalizations.of(context)!.agree_to_terms),
           ],
-        ));
+        ),
+        Form(
+            key: _formKey,
+            child: ResponsiveRowColumn(
+              rowSpacing: 8,
+              layout: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                  ? ResponsiveRowColumnType.COLUMN
+                  : ResponsiveRowColumnType.ROW,
+              children: [
+                ResponsiveRowColumnItem(
+                  rowFlex: 3,
+                  child: TextFormField(
+                    controller: _emailFormController,
+                    decoration: InputDecoration(
+                        label:
+                            Text(AppLocalizations.of(context)!.mail_address)),
+                    validator: (value) {
+                      final result = EmailValidator.validate(value ?? '');
+                      if (result) {
+                        return null;
+                      }
+                      return AppLocalizations.of(context)!
+                          .enter_your_email_address;
+                    },
+                  ),
+                ),
+                ResponsiveRowColumnItem(
+                  rowFlex: 1,
+                  child: FilledButton.icon(
+                    onPressed: _sendStatus == _EmailAddressSendStatus.initial &&
+                            _isChecked
+                        ? () async {
+                            if (_formKey.currentState?.validate() == true) {
+                              setState(() {
+                                _sendStatus = _EmailAddressSendStatus.sending;
+                                widget.sendStatusChanged(_sendStatus);
+                              });
+                              try {
+                                final setting = ActionCodeSettings(
+                                  url: 'http://localhost/verification',
+                                  handleCodeInApp: true,
+                                );
+                                setState(() {
+                                  _sendStatus =
+                                      _EmailAddressSendStatus.completed;
+                                  widget.sendStatusChanged(_sendStatus);
+                                });
+                                await auth.sendSignInLinkToEmail(
+                                    email: _emailFormController.text,
+                                    actionCodeSettings: setting);
+                              } catch (e) {
+                                debugPrint("failed send $e");
+                                setState(() {
+                                  _sendStatus = _EmailAddressSendStatus.error;
+                                  widget.sendStatusChanged(_sendStatus);
+                                });
+                              }
+                            }
+                          }
+                        : null,
+                    icon: const Icon(Icons.send),
+                    label: Text(AppLocalizations.of(context)!.send),
+                  ),
+                )
+              ],
+            )),
+      ],
+    );
   }
 }
 

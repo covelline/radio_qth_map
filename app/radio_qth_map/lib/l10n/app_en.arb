@@ -1,6 +1,7 @@
 {
   "about_me": "About me",
   "add_qso": "Add QSO",
+  "agree_to_terms": "I agree to the terms of use",
   "app_description": "A Radio Operation Log Mapping Tool to Visualize Your Wireless Experiences",
   "attension_display_other_callsign_message": "Please be considerate of privacy when displaying the other's callsign on the map",
   "band": "Band",
