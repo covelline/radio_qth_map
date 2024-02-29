@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
+import 'package:radio_qth_map/screen/login_recommendation_dialog.dart';
 import 'package:radio_qth_map/service/history.dart';
 import 'package:radio_qth_map/widget/amateur_radio_band_legend.dart';
 import 'package:radio_qth_map/widget/login_text_button.dart';
@@ -128,9 +130,24 @@ class MapScreenState extends State<MapScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
-            final newOperationId = await context.push('/qso/add');
-            if (newOperationId != null && context.mounted) {
-              context.go('/map/$newOperationId');
+            final auth = context.read<AuthStateNotifier>().auth;
+            final bool navigateToLogin;
+            if (auth.currentUser == null) {
+              navigateToLogin = await showDialog(
+                  context: context,
+                  builder: (context) => const LoginRecommendationDialog());
+            } else {
+              navigateToLogin = false;
+            }
+            if (context.mounted) {
+              if (navigateToLogin == true) {
+                context.go('/login');
+              } else {
+                final newOperationId = await context.push('/qso/add');
+                if (newOperationId != null && context.mounted) {
+                  context.go('/map/$newOperationId');
+                }
+              }
             }
           },
           label: Text(AppLocalizations.of(context)!.add_qso),
