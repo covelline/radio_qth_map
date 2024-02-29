@@ -121,7 +121,7 @@ class OperationMapState extends State<OperationMap>
     final operation = await repository.findOperation(operationId);
     if (operation == null) {
       // Snackbarでエラーを表示する
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.operation_not_found),
