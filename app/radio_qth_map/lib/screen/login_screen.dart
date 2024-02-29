@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -175,7 +176,7 @@ class _EmailAddressFormState extends State<_EmailAddressForm> {
                               });
                               try {
                                 final setting = ActionCodeSettings(
-                                  url: 'http://localhost/verification',
+                                  url: '${Uri.base.origin}/verification',
                                   handleCodeInApp: true,
                                 );
                                 setState(() {
@@ -183,6 +184,11 @@ class _EmailAddressFormState extends State<_EmailAddressForm> {
                                       _EmailAddressSendStatus.completed;
                                   widget.sendStatusChanged(_sendStatus);
                                 });
+                                final sharedPreferences =
+                                    await SharedPreferences.getInstance();
+                                await sharedPreferences.setString(
+                                    'emailForSigninLink',
+                                    _emailFormController.text);
                                 await auth.sendSignInLinkToEmail(
                                     email: _emailFormController.text,
                                     actionCodeSettings: setting);

@@ -18,6 +18,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:radio_qth_map/firebase_options/dev.dart' as dev;
 import 'package:radio_qth_map/firebase_options/prod.dart' as prod;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   usePathUrlStrategy();
@@ -48,6 +49,7 @@ void main() async {
   } else {
     defaultLocale = const Locale("en");
   }
+  final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
       providers: [
@@ -55,7 +57,11 @@ void main() async {
           create: (_) => FirestoreRepository(firestore: firestore),
         ),
         ChangeNotifierProvider(create: (_) => LocaleNotifier(defaultLocale)),
-        ChangeNotifierProvider(create: (_) => AuthStateNotifier(auth: auth)),
+        ChangeNotifierProvider(
+            create: (_) => AuthStateNotifier(
+                  auth: auth,
+                  prefs: prefs,
+                )),
       ],
       child: const MyApp(),
     ),
