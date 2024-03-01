@@ -11,9 +11,6 @@ class ScreenAnalytics extends NavigatorObserver {
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
     if (route.settings.name != null) {
-      _analytics.setCurrentScreen(
-        screenName: route.settings.name!,
-      );
       _analytics.logScreenView(
         screenName: route.settings.name!,
       );

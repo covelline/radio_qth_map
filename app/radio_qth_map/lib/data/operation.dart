@@ -30,6 +30,9 @@ class Operation with _$Operation {
 
     /// 運用時間
     @DateTimeConverter() required DateTime dateTime,
+
+    /// 登録したアカウントのID
+    String? ownerId,
   }) = _Operation;
 
   factory Operation.fromJson(

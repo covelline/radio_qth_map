@@ -10,6 +10,7 @@ import 'package:radio_qth_map/data/operation.dart';
 import 'package:radio_qth_map/data/operation_info.dart';
 import 'package:radio_qth_map/data/qso.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/screen/share_operation_dialog.dart';
 import 'package:radio_qth_map/widget/infomation_marker.dart';
@@ -266,6 +267,9 @@ class OperationMapState extends State<OperationMap>
     final sheetController = showBottomSheet(
       context: context,
       builder: (context) {
+        final ownOperation =
+            context.read<AuthStateNotifier>().auth.currentUser?.uid ==
+                operation.ownerId;
         return SizedBox(
           height: 200,
           child: Scaffold(
@@ -278,18 +282,57 @@ class OperationMapState extends State<OperationMap>
                   icon: const Icon(Icons.close),
                 ),
                 actions: [
-                  FilledButton.tonalIcon(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ShareOperationDialog(
-                                operationId: operation.id!);
-                          });
-                    },
-                    icon: const Icon(Icons.share),
-                    label: Text(AppLocalizations.of(context)!.share),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilledButton.tonalIcon(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ShareOperationDialog(
+                                  operationId: operation.id!);
+                            });
+                      },
+                      icon: const Icon(Icons.share),
+                      label: Text(AppLocalizations.of(context)!.share),
+                    ),
                   ),
+                  if (ownOperation)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FilledButton.tonalIcon(
+                        onPressed: () async {
+                          final repository =
+                              context.read<FirestoreRepository>();
+                          await repository.deleteOperation(operation.id!);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    const Icon(Icons.delete),
+                                    const SizedBox(width: 8),
+                                    Text(AppLocalizations.of(context)!
+                                        .deleted_operation_snackbar_message)
+                                  ],
+                                ),
+                                showCloseIcon: true,
+                                action: SnackBarAction(
+                                  label: AppLocalizations.of(context)!
+                                      .deleted_operation_snackbar_action_undo,
+                                  onPressed: () async {
+                                    await repository.undoDeletion(operation);
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.delete),
+                        label: Text(AppLocalizations.of(context)!.delete),
+                      ),
+                    ),
                 ],
               ),
               body: ListView(

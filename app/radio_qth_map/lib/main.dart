@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,14 @@ import 'package:intl/intl_standalone.dart' as intl_standalone;
 import 'package:intl/intl_browser.dart' as intl_browser;
 import 'package:provider/provider.dart';
 import 'package:radio_qth_map/main_router.dart';
+import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/repository/locale_notifier.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:radio_qth_map/firebase_options/dev.dart' as dev;
 import 'package:radio_qth_map/firebase_options/prod.dart' as prod;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   usePathUrlStrategy();
@@ -35,8 +38,10 @@ void main() async {
     );
   }
   final firestore = FirebaseFirestore.instance;
+  final auth = FirebaseAuth.instance;
   if (dotenv.maybeGet('USE_FIRESTORE_EMULATOR') == 'true') {
     firestore.useFirestoreEmulator('localhost', 8080);
+    auth.useAuthEmulator('localhost', 9099);
   }
   final Locale defaultLocale;
   if (Intl.getCurrentLocale().startsWith('ja')) {
@@ -44,6 +49,7 @@ void main() async {
   } else {
     defaultLocale = const Locale("en");
   }
+  final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
       providers: [
@@ -51,6 +57,11 @@ void main() async {
           create: (_) => FirestoreRepository(firestore: firestore),
         ),
         ChangeNotifierProvider(create: (_) => LocaleNotifier(defaultLocale)),
+        ChangeNotifierProvider(
+            create: (_) => AuthStateNotifier(
+                  auth: auth,
+                  prefs: prefs,
+                )),
       ],
       child: const MyApp(),
     ),

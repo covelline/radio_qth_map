@@ -9,6 +9,7 @@ import 'package:radio_qth_map/data/amateur_radio_band.dart';
 import 'package:radio_qth_map/data/amateur_radio_mode.dart';
 import 'package:radio_qth_map/data/free_license_radio_mode.dart';
 import 'package:radio_qth_map/data/license_type.dart';
+import 'package:radio_qth_map/repository/auth_state_notifier.dart';
 import 'package:radio_qth_map/repository/firestore_repository.dart';
 import 'package:radio_qth_map/widget/adif_parser.dart';
 import 'package:radio_qth_map/widget/datetime_form_field.dart';
@@ -62,6 +63,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             ? null
             : () async {
                 final repository = context.read<FirestoreRepository>();
+                final auth = context.read<AuthStateNotifier>().auth;
                 // コールサインの表示設定を変更してから保存する
                 final id = await repository.storeOperations(
                   _logList
@@ -71,6 +73,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                         ),
                       )
                       .toList(),
+                  ownerId: auth.currentUser?.uid,
                 );
                 if (context.mounted) {
                   context.pop(id);

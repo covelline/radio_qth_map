@@ -65,7 +65,10 @@ class FirestoreRepository {
 
   /// 運用情報を保存する
   /// operationIdを返す
-  Future<String> storeOperations(List<OperationRowData> operations) async {
+  Future<String> storeOperations(
+    List<OperationRowData> operations, {
+    String? ownerId,
+  }) async {
     // 運用開始・終了時間のリストを作る
     final operationTimes = operations
         .map((e) => [e.startTime, e.endTime])
@@ -92,6 +95,7 @@ class FirestoreRepository {
       dateTime: startTime ?? endTime!,
       startTime: startTime,
       endTime: endTime,
+      ownerId: ownerId,
     );
     // OperationInfoをキーに、Qsoのリストを値に取るMapを作る
     final qsoMap = operations.fold<Map<OperationInfo, List<Qso>>>(
@@ -217,5 +221,18 @@ class FirestoreRepository {
       }
     }));
     return controller.stream;
+  }
+
+  /// 運用情報を削除する
+  Future<void> deleteOperation(String operationId) async {
+    await firestore.collection('operation').doc(operationId).delete();
+  }
+
+  /// 削除した運用情報を元に戻す
+  Future<void> undoDeletion(Operation operation) async {
+    await firestore
+        .collection('operation')
+        .doc(operation.id)
+        .set(operation.toJson());
   }
 }
