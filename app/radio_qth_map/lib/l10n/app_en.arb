@@ -19,6 +19,8 @@
   "dcr": "DCR",
   "delete": "Delete",
   "delete_operation_confirm_message": "Are you sure you want to delete?",
+  "deleted_operation_snackbar_action_undo": "Undo deletion",
+  "deleted_operation_snackbar_message": "Deleted",
   "display_other_callsign_on_map": "Display the call sign of the other's on the map",
   "end": "End",
   "enter_your_email_address": "Please enter your email address.",

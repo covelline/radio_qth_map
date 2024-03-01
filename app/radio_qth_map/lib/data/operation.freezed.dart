@@ -12,7 +12,7 @@ part of 'operation.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Operation _$OperationFromJson(Map<String, dynamic> json) {
   return _Operation.fromJson(json);
@@ -41,6 +41,9 @@ mixin _$Operation {
   @DateTimeConverter()
   DateTime get dateTime => throw _privateConstructorUsedError;
 
+  /// 登録したアカウントのID
+  String? get ownerId => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $OperationCopyWith<Operation> get copyWith =>
@@ -58,7 +61,8 @@ abstract class $OperationCopyWith<$Res> {
       Location location,
       @DateTimeConverter() DateTime? startTime,
       @DateTimeConverter() DateTime? endTime,
-      @DateTimeConverter() DateTime dateTime});
+      @DateTimeConverter() DateTime dateTime,
+      String? ownerId});
 
   $LocationCopyWith<$Res> get location;
 }
@@ -82,6 +86,7 @@ class _$OperationCopyWithImpl<$Res, $Val extends Operation>
     Object? startTime = freezed,
     Object? endTime = freezed,
     Object? dateTime = null,
+    Object? ownerId = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -108,6 +113,10 @@ class _$OperationCopyWithImpl<$Res, $Val extends Operation>
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      ownerId: freezed == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -134,7 +143,8 @@ abstract class _$$OperationImplCopyWith<$Res>
       Location location,
       @DateTimeConverter() DateTime? startTime,
       @DateTimeConverter() DateTime? endTime,
-      @DateTimeConverter() DateTime dateTime});
+      @DateTimeConverter() DateTime dateTime,
+      String? ownerId});
 
   @override
   $LocationCopyWith<$Res> get location;
@@ -157,6 +167,7 @@ class __$$OperationImplCopyWithImpl<$Res>
     Object? startTime = freezed,
     Object? endTime = freezed,
     Object? dateTime = null,
+    Object? ownerId = freezed,
   }) {
     return _then(_$OperationImpl(
       id: freezed == id
@@ -183,6 +194,10 @@ class __$$OperationImplCopyWithImpl<$Res>
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      ownerId: freezed == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -197,7 +212,8 @@ class _$OperationImpl implements _Operation {
       required this.location,
       @DateTimeConverter() this.startTime,
       @DateTimeConverter() this.endTime,
-      @DateTimeConverter() required this.dateTime});
+      @DateTimeConverter() required this.dateTime,
+      this.ownerId});
 
   factory _$OperationImpl.fromJson(Map<String, dynamic> json) =>
       _$$OperationImplFromJson(json);
@@ -229,9 +245,13 @@ class _$OperationImpl implements _Operation {
   @DateTimeConverter()
   final DateTime dateTime;
 
+  /// 登録したアカウントのID
+  @override
+  final String? ownerId;
+
   @override
   String toString() {
-    return 'Operation(id: $id, callsign: $callsign, location: $location, startTime: $startTime, endTime: $endTime, dateTime: $dateTime)';
+    return 'Operation(id: $id, callsign: $callsign, location: $location, startTime: $startTime, endTime: $endTime, dateTime: $dateTime, ownerId: $ownerId)';
   }
 
   @override
@@ -248,13 +268,14 @@ class _$OperationImpl implements _Operation {
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.dateTime, dateTime) ||
-                other.dateTime == dateTime));
+                other.dateTime == dateTime) &&
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, callsign, location, startTime, endTime, dateTime);
+  int get hashCode => Object.hash(runtimeType, id, callsign, location,
+      startTime, endTime, dateTime, ownerId);
 
   @JsonKey(ignore: true)
   @override
@@ -277,7 +298,8 @@ abstract class _Operation implements Operation {
       required final Location location,
       @DateTimeConverter() final DateTime? startTime,
       @DateTimeConverter() final DateTime? endTime,
-      @DateTimeConverter() required final DateTime dateTime}) = _$OperationImpl;
+      @DateTimeConverter() required final DateTime dateTime,
+      final String? ownerId}) = _$OperationImpl;
 
   factory _Operation.fromJson(Map<String, dynamic> json) =
       _$OperationImpl.fromJson;
@@ -309,6 +331,10 @@ abstract class _Operation implements Operation {
   /// 運用時間
   @DateTimeConverter()
   DateTime get dateTime;
+  @override
+
+  /// 登録したアカウントのID
+  String? get ownerId;
   @override
   @JsonKey(ignore: true)
   _$$OperationImplCopyWith<_$OperationImpl> get copyWith =>

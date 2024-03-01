@@ -17,6 +17,7 @@ _$OperationImpl _$$OperationImplFromJson(Map<String, dynamic> json) =>
           json['endTime'], const DateTimeConverter().fromJson),
       dateTime:
           const DateTimeConverter().fromJson(json['dateTime'] as Timestamp),
+      ownerId: json['ownerId'] as String?,
     );
 
 Map<String, dynamic> _$$OperationImplToJson(_$OperationImpl instance) =>
@@ -29,6 +30,7 @@ Map<String, dynamic> _$$OperationImplToJson(_$OperationImpl instance) =>
       'endTime': _$JsonConverterToJson<Timestamp, DateTime>(
           instance.endTime, const DateTimeConverter().toJson),
       'dateTime': const DateTimeConverter().toJson(instance.dateTime),
+      'ownerId': instance.ownerId,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

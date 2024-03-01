@@ -19,6 +19,8 @@
   "dcr": "DCR",
   "delete": "削除",
   "delete_operation_confirm_message": "このデータを削除して良いですか",
+  "deleted_operation_snackbar_action_undo": "取り消す",
+  "deleted_operation_snackbar_message": "削除しました",
   "display_other_callsign_on_map": "相手のコールサインを地図に表示する",
   "end": "終了",
   "enter_your_email_address": "メールアドレスを入力してください",
