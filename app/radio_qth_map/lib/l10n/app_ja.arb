@@ -71,6 +71,7 @@
   "share_operation_format": "{callsign} が {date} に運用したログを地図で確認する",
   "share_with_x": "X（Twitter）に投稿する",
   "show_all": "全て見る",
+  "show_how_to_use": "使い方説明",
   "shrink": "折りたたむ",
   "signup_description": "会員登録はメールアドレス認証によって行います。会員登録が完了するとアップロードしたログの削除ができます。利用規約・プライバシーポリシーを確認して、承認頂ける場合はメールアドレスを入力して会員登録をしてください。",
   "start": "開始",

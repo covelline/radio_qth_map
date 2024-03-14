@@ -11,6 +11,7 @@ import 'package:radio_qth_map/widget/amateur_radio_band_legend.dart';
 import 'package:radio_qth_map/widget/login_text_button.dart';
 import 'package:radio_qth_map/widget/operation_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({
@@ -126,6 +127,13 @@ class MapScreenState extends State<MapScreen> {
               },
             ),
             const LoginTextButton(),
+            IconButton(
+              onPressed: () {
+                launchUrlString(
+                    "https://blog.covelline.com/entry/qth-map-how-to-jp");
+              },
+              icon: const Icon(Icons.help),
+            )
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
