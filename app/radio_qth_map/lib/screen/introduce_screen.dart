@@ -7,6 +7,7 @@ import 'package:radio_qth_map/widget/login_text_button.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class IntroduceScreen extends StatelessWidget {
   const IntroduceScreen({super.key});
@@ -322,8 +323,19 @@ class IntroduceScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 12),
+            SliverToBoxAdapter(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      launchUrlString(
+                          "https://blog.covelline.com/entry/qth-map-how-to-jp");
+                    },
+                    child: Text(AppLocalizations.of(context)!.show_how_to_use),
+                  ),
+                ),
+              ),
             ),
             SliverToBoxAdapter(
               child: MaxWidthBox(
