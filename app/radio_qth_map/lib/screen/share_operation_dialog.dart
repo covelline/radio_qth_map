@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +18,7 @@ class ShareOperationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final repository = context.read<FirestoreRepository>();
     final dateFormat = DateFormat.yMd(AppLocalizations.of(context)!.localeName);
+    final analytics = context.read<FirebaseAnalytics>();
     return AlertDialog(
       title: Text(AppLocalizations.of(context)!.share),
       content: FutureBuilder(
@@ -36,6 +38,11 @@ class ShareOperationDialog extends StatelessWidget {
               children: [
                 FilledButton.tonalIcon(
                   onPressed: () {
+                    analytics.logShare(
+                      contentType: "operation",
+                      itemId: operationId,
+                      method: "X",
+                    );
                     final url = '${Uri.base.origin}/map/${operation.id!}';
                     launchUrlString(
                         'https://twitter.com/intent/tweet?text=${Uri.encodeComponent(shareText)}&hashtags=QTHMap&url=${Uri.encodeComponent(url)}');
@@ -52,6 +59,11 @@ class ShareOperationDialog extends StatelessWidget {
                 const SizedBox(height: 16),
                 FilledButton.tonalIcon(
                   onPressed: () async {
+                    analytics.logShare(
+                      contentType: "operation",
+                      itemId: operationId,
+                      method: "clipboard",
+                    );
                     final text = """
 $shareText
 ${Uri.base.origin}/map/${operation.id!}

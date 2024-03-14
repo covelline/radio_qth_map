@@ -1,13 +1,16 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthStateNotifier extends ChangeNotifier {
   final FirebaseAuth auth;
+  final FirebaseAnalytics analytics;
   final SharedPreferences prefs;
 
   AuthStateNotifier({
     required this.auth,
+    required this.analytics,
     required this.prefs,
   }) {
     auth.authStateChanges().listen((_) {
@@ -21,7 +24,13 @@ class AuthStateNotifier extends ChangeNotifier {
       return null;
     }
     try {
-      await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+      final cred =
+          await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+      if (cred.additionalUserInfo?.isNewUser == true) {
+        analytics.logSignUp(signUpMethod: "emailLink");
+      } else {
+        analytics.logLogin(loginMethod: "emailLink");
+      }
     } catch (e) {
       debugPrint('Failed to sign in with email link: $e');
     } finally {
