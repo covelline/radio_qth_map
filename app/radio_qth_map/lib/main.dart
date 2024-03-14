@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -49,10 +50,12 @@ void main() async {
   } else {
     defaultLocale = const Locale("en");
   }
+  final analytics = FirebaseAnalytics.instance;
   final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (_) => analytics),
         Provider(
           create: (_) => FirestoreRepository(firestore: firestore),
         ),
@@ -60,6 +63,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (_) => AuthStateNotifier(
                   auth: auth,
+                  analytics: analytics,
                   prefs: prefs,
                 )),
       ],

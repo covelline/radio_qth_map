@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
@@ -263,7 +264,12 @@ class OperationMapState extends State<OperationMap>
 
   void _showOperationDetail() async {
     assert(_selectedOperation != null);
+    final analytics = context.read<FirebaseAnalytics>();
     final operation = _selectedOperation!;
+    analytics.logSelectContent(
+      contentType: "operation",
+      itemId: operation.id!,
+    );
     final sheetController = showBottomSheet(
       context: context,
       builder: (context) {
@@ -304,7 +310,14 @@ class OperationMapState extends State<OperationMap>
                         onPressed: () async {
                           final repository =
                               context.read<FirestoreRepository>();
+                          final analytics = context.read<FirebaseAnalytics>();
                           await repository.deleteOperation(operation.id!);
+                          analytics.logEvent(
+                            name: "operation_deleted",
+                            parameters: {
+                              "operation_id": operation.id,
+                            },
+                          );
                           if (context.mounted) {
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -323,6 +336,12 @@ class OperationMapState extends State<OperationMap>
                                       .deleted_operation_snackbar_action_undo,
                                   onPressed: () async {
                                     await repository.undoDeletion(operation);
+                                    analytics.logEvent(
+                                      name: "operation_deleted_undo",
+                                      parameters: {
+                                        "operation_id": operation.id,
+                                      },
+                                    );
                                   },
                                 ),
                               ),

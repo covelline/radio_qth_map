@@ -1,5 +1,6 @@
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -64,6 +65,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             : () async {
                 final repository = context.read<FirestoreRepository>();
                 final auth = context.read<AuthStateNotifier>().auth;
+                final analytics = context.read<FirebaseAnalytics>();
                 // コールサインの表示設定を変更してから保存する
                 final id = await repository.storeOperations(
                   _logList
@@ -74,6 +76,16 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       )
                       .toList(),
                   ownerId: auth.currentUser?.uid,
+                );
+                analytics.setUserProperty(
+                  name: "operation_added",
+                  value: "true",
+                );
+                analytics.logEvent(
+                  name: "operation_added",
+                  parameters: {
+                    "operation_id": id,
+                  },
                 );
                 if (context.mounted) {
                   context.pop(id);
