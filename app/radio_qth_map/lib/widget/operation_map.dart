@@ -273,9 +273,9 @@ class OperationMapState extends State<OperationMap>
     final sheetController = showBottomSheet(
       context: context,
       builder: (context) {
+        final currentUser = context.read<AuthStateNotifier>().auth.currentUser;
         final ownOperation =
-            context.read<AuthStateNotifier>().auth.currentUser?.uid ==
-                operation.ownerId;
+            currentUser != null && currentUser.uid == operation.ownerId;
         return SizedBox(
           height: 200,
           child: Scaffold(
