@@ -1,10 +1,10 @@
 name: radio_qth_map
 description: qth map for amature/free ham
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.0.1+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -12,11 +12,10 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.2
   flutter_localizations:
     sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.19.0
   freezed: ^2.4.5
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
@@ -55,4 +54,3 @@ flutter:
   assets:
     - image/
     - key.env
-    
