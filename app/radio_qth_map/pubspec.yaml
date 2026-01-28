@@ -35,7 +35,7 @@ dependencies:
     git:
       url: https://github.com/numa08/dart_adif.git
       ref: fe2a6a0f5c883e7e09e1d65e6c928b3cc10982a9
-  file_picker: ^8.0.0
+  file_picker: 10.3.10
   firebase_analytics: ^10.8.0
   firebase_auth: ^4.17.4
   email_validator: ^2.1.17
