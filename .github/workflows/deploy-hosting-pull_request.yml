@@ -11,7 +11,7 @@ jobs:
       run:
         working-directory: app/radio_qth_map
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - shell: bash
         env:
           FIREBASE_APP_CONFIGURE_DEV: ${{ secrets.FIREBASE_APP_CONFIGURE_DEV }}
